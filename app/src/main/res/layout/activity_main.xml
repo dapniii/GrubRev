@@ -40,6 +40,7 @@
         android:layout_marginTop="85dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="50dp"
+        app:cardBackgroundColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,23 +56,30 @@
             <EditText
                 android:id="@+id/usernameEt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_margin="10dp"
+                android:background="@drawable/custom_input"
                 android:ems="10"
                 android:hint="Username"
                 android:inputType="textPersonName"
-                android:text="Username"
+                android:outlineSpotShadowColor="@color/black"
+                android:paddingStart="15dp"
+                android:textColor="#000000"
+                android:textColorHint="#80000000"
                 android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/passwordEt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_margin="10dp"
+                android:background="@drawable/custom_input"
                 android:ems="10"
                 android:hint="Password"
                 android:inputType="textShortMessage|textPassword"
-                android:text="Password"
+                android:paddingStart="15dp"
+                android:textColor="#000000"
+                android:textColorHint="#80000000"
                 android:textSize="18sp" />
 
             <Button
@@ -91,7 +99,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Already have an account?"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/signupBtn"
