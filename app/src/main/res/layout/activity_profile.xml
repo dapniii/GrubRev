@@ -43,11 +43,11 @@
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/backIv"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/backIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
