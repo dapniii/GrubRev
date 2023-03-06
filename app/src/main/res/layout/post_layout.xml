@@ -61,16 +61,16 @@
                     android:id="@+id/userTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="postUserTv"
+                    android:text="userTv"
                     android:textColor="#000000"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/contentTv"
+                    android:id="@+id/commentTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="contentTv \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    android:text="commentTv \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                     android:textColor="#000000" />
             </LinearLayout>
 
