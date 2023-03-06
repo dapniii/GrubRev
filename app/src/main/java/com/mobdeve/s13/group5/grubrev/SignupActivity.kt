@@ -34,7 +34,7 @@ class SignupActivity : AppCompatActivity() {
 
         //TODO: TEMP
         this.signupBtn.setOnClickListener((View.OnClickListener {
-            openProfileActivity()
+            openMapActivity()
         }))
     }
 
@@ -46,8 +46,8 @@ class SignupActivity : AppCompatActivity() {
     }
 
     //TODO: TEMP
-    private fun openProfileActivity() {
-        val intent = Intent(this, ProfileActivity::class.java)
+    private fun openMapActivity() {
+        val intent = Intent(this, MapActivity::class.java)
         startActivity(intent)
         finish()
     }

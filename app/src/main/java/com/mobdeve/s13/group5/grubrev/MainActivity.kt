@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         //TODO: TEMP
         this.loginBtn.setOnClickListener((View.OnClickListener {
-            openProfileActivity()
+            openMapActivity()
         }))
     }
 
@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     //TODO: TEMP
-    private fun openProfileActivity() {
-        val intent = Intent(this, ProfileActivity::class.java)
+    private fun openMapActivity() {
+        val intent = Intent(this, MapActivity::class.java)
         startActivity(intent)
         finish()
     }
