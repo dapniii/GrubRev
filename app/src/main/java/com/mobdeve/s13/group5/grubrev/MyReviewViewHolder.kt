@@ -5,4 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class MyReviewViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    fun bindData(review: Review) {
+
+    }
 }

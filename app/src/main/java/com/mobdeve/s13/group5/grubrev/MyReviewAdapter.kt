@@ -1,19 +1,22 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 
 class MyReviewAdapter(private val data: ArrayList<Review>): Adapter<MyReviewViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyReviewViewHolder {
-        TODO("Not yet implemented")
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(R.layout.post_layout, parent, false)
+        return MyReviewViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MyReviewViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.bindData(data.get(position))
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return data.size
     }
 }
