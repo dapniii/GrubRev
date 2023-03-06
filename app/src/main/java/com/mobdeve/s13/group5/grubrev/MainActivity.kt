@@ -30,11 +30,23 @@ class MainActivity : AppCompatActivity() {
         this.signupTv.setOnClickListener(View.OnClickListener {
             openSignUpActivity()
         })
+
+        //TODO: TEMP
+        this.loginBtn.setOnClickListener((View.OnClickListener {
+            openProfileActivity()
+        }))
     }
 
     //Opens SignupActivity and finishes MainActivity
     private fun openSignUpActivity() {
         val intent = Intent(this, SignupActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    //TODO: TEMP
+    private fun openProfileActivity() {
+        val intent = Intent(this, ProfileActivity::class.java)
         startActivity(intent)
         finish()
     }
