@@ -61,7 +61,7 @@
         android:id="@+id/usernameTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="usernameTv"
         android:textColor="#000000"
         android:textSize="24sp"
