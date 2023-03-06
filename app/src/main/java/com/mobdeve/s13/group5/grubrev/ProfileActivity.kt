@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var dateTv: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var logoutBtn: Button
+    private lateinit var backIv: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class ProfileActivity : AppCompatActivity() {
         this.dateTv = findViewById(R.id.dateTv)
         this.recyclerView = findViewById(R.id.recyclerView)
         this.logoutBtn = findViewById(R.id.logoutBtn)
+        this.backIv = findViewById(R.id.backIv)
 
         //Account Details
         this.usernameTv.text = "@Me"
@@ -39,6 +42,11 @@ class ProfileActivity : AppCompatActivity() {
         //OnCLick Logout, go back to Login Activity
         this.logoutBtn.setOnClickListener(View.OnClickListener {
             openMainActivity()
+        })
+
+        //OnCLick Back ImageView, finish current Profile Activity
+        this.backIv.setOnClickListener(View.OnClickListener {
+            finish()
         })
 
     }
