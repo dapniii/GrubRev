@@ -9,7 +9,7 @@
 
 
     <Button
-        android:id="@+id/loginBtn2"
+        android:id="@+id/logoutBtn"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -101,7 +101,7 @@
         android:layout_height="364dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/loginBtn2"
+        app:layout_constraintBottom_toTopOf="@+id/logoutBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reviewTv" />
