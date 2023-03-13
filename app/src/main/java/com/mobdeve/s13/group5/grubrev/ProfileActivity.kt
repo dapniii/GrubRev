@@ -20,7 +20,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var logoutBtn: Button
     private lateinit var backIv: ImageView
 
-    //Temp User
+    //TODO: Temp User
     private val currUser: String = "Candice"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +66,6 @@ class ProfileActivity : AppCompatActivity() {
 
     //Filter Review Data based on Username
     private fun filterToUsername(username: String): List<Review> {
-        return reviewList.filter { it.user == username }
+        return reviewList.filter{it.user == username}
     }
 }
