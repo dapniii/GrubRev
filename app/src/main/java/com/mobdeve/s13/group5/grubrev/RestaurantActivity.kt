@@ -1,5 +1,6 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.content.Intent
 import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -57,6 +58,10 @@ class RestaurantActivity : AppCompatActivity() {
         this.backToMapIv.setOnClickListener(View.OnClickListener {
             finish()
         })
+
+        this.addCommentBtn.setOnClickListener(View.OnClickListener {
+            openAddReviewActivity()
+        })
     }
 
     private fun filterToRestaurant(restaurant: String): List<Review> {
@@ -65,6 +70,11 @@ class RestaurantActivity : AppCompatActivity() {
 
     private fun getAverageRating(filteredReviews: List<Review>): Double {
         return filteredReviews.map{it.rating}.average()
+    }
+
+    private fun openAddReviewActivity() {
+        val intent = Intent(this, AddReviewActivity::class.java)
+        startActivity(intent)
     }
 
 }
