@@ -25,7 +25,7 @@ class DataHelper {
                 Review(
                     "SecretAgno",
                     "Boffa",
-                    "This place good",
+                    "The food was delicious and the service was excellent. Highly recommend!",
                     3
                 )
             )
@@ -33,7 +33,7 @@ class DataHelper {
                 Review(
                     "KuboBistro",
                     "Sugma",
-                    "This place good",
+                    "Great atmosphere and friendly staff. The food was top-notch too!",
                     2
                 )
             )
@@ -41,7 +41,7 @@ class DataHelper {
                 Review(
                     "KainanKanto",
                     "Chad",
-                    "This place good",
+                    "This restaurant never disappoints. The quality of the food is always amazing.",
                     1
                 )
             )
@@ -49,7 +49,7 @@ class DataHelper {
                 Review(
                     "SecretAgno",
                     "Sugon",
-                    "This place good",
+                    "A hidden gem! The food was so tasty and the prices were very reasonable.",
                     5
                 )
             )
@@ -57,7 +57,7 @@ class DataHelper {
                 Review(
                     "KuboBistro",
                     "Chad",
-                    "This place good",
+                    "Amazing food and the staff was very accommodating to our dietary needs.",
                     2
                 )
             )
@@ -65,7 +65,7 @@ class DataHelper {
                 Review(
                     "KainanKanto",
                     "Sugma",
-                    "This place good",
+                    "The flavors in every dish were perfectly balanced. Can't wait to come back!",
                     5
                 )
             )
@@ -73,10 +73,35 @@ class DataHelper {
                 Review(
                     "KuboBistro",
                     "Boffa",
-                    "This place good",
+                    "This place has the best burgers I've ever tasted. Highly recommend trying one!",
                     4
                 )
             )
+            data.add(
+                Review(
+                    "KainanKanto",
+                    "Candice",
+                    "We had a fantastic dining experience here. The ambiance was perfect and the food was divine.",
+                    5
+                )
+            )
+            data.add(
+                Review(
+                    "KuboBistro",
+                    "Candice",
+                    "Service was great and the food was out of this world. We'll definitely be back!",
+                    5
+                )
+            )
+            data.add(
+                Review(
+                    "SecretAgno",
+                    "Candice",
+                    "Everything about this restaurant was perfect. From the appetizers to the desserts, we were blown away.",
+                    5
+                )
+            )
+
 
             return data;
         }

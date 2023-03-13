@@ -20,6 +20,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var logoutBtn: Button
     private lateinit var backIv: ImageView
 
+    //Temp User
+    private val currUser: String = "Candice"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -32,11 +35,14 @@ class ProfileActivity : AppCompatActivity() {
         this.backIv = findViewById(R.id.backIv)
 
         //Account Details
-        this.usernameTv.text = "@Me"
+        this.usernameTv.text = currUser.toString()
         this.dateTv.text = "Joined: 03/04/2023"
 
+        //Filter Data to Current User
+        val filteredReviews = filterToUsername(currUser)
+
         //Account Reviews
-        this.recyclerView.adapter = MyReviewAdapter(this.reviewList)
+        this.recyclerView.adapter = MyReviewAdapter(filteredReviews as ArrayList<Review>)
         this.recyclerView.layoutManager = LinearLayoutManager(this)
 
         //OnCLick Logout, go back to Login Activity
@@ -56,5 +62,10 @@ class ProfileActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    //Filter Review Data based on Username
+    private fun filterToUsername(username: String): List<Review> {
+        return reviewList.filter { it.user == username }
     }
 }
