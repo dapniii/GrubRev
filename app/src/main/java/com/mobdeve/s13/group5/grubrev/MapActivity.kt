@@ -11,7 +11,9 @@ class MapActivity : AppCompatActivity() {
     private lateinit var profileIv: ImageView
 
     //TODO: Temp
-    private lateinit var tempRestoBtn: Button
+    private lateinit var yellowPinIv: ImageView
+    private lateinit var orangePinIv: ImageView
+    private lateinit var redPinIv: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +21,12 @@ class MapActivity : AppCompatActivity() {
 
         //Initialize
         this.profileIv = findViewById(R.id.profileIv)
-        this.tempRestoBtn = findViewById(R.id.tempRestoBtn)
+        //TODO: Temp Initialize
+        this.yellowPinIv = findViewById(R.id.yellowPinIv)
+        this.orangePinIv = findViewById(R.id.orangePinIv)
+        this.redPinIv = findViewById(R.id.redPinIv)
+
+
 
         //OnClick Profile ImageView
         this.profileIv.setOnClickListener(View.OnClickListener {
@@ -27,7 +34,13 @@ class MapActivity : AppCompatActivity() {
         })
 
         //TODO: Temp Access to Restaurant Activity
-        this.tempRestoBtn.setOnClickListener(View.OnClickListener {
+        this.yellowPinIv.setOnClickListener(View.OnClickListener {
+            openRestaurantActivity()
+        })
+        this.orangePinIv.setOnClickListener(View.OnClickListener {
+            openRestaurantActivity()
+        })
+        this.redPinIv.setOnClickListener(View.OnClickListener {
             openRestaurantActivity()
         })
     }
