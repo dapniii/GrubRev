@@ -26,7 +26,7 @@ class DataHelper {
                     "SecretAgno",
                     "Boffa",
                     "The food was delicious and the service was excellent. Highly recommend!",
-                    3.0
+                    3.5
                 )
             )
             data.add(
@@ -50,7 +50,7 @@ class DataHelper {
                     "SecretAgno",
                     "Sugon",
                     "A hidden gem! The food was so tasty and the prices were very reasonable.",
-                    5.0
+                    3.5
                 )
             )
             data.add(
