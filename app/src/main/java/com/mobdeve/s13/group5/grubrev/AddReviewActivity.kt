@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.Toast
 
 class AddReviewActivity : AppCompatActivity() {
 
@@ -37,9 +38,17 @@ class AddReviewActivity : AppCompatActivity() {
             finish()
         })
         //TODO: Temp
+//        this.sendBtn.setOnClickListener(View.OnClickListener {
+//            finish()
+//        })
         this.sendBtn.setOnClickListener(View.OnClickListener {
-            finish()
+            Toast.makeText(
+                this@AddReviewActivity,
+                "Rating is: "+addRatingRb.rating,
+                Toast.LENGTH_SHORT
+            ).show()
         })
+
 
     }
 }

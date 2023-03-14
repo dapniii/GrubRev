@@ -4,5 +4,5 @@ class Review(
     val restaurant : String,
     val user: String,
     val comment: String,
-    val rating: Int) {
+    val rating: Double) {
 }
