@@ -47,6 +47,7 @@ class AddReviewActivity : AppCompatActivity() {
                 "Rating is: "+addRatingRb.rating,
                 Toast.LENGTH_SHORT
             ).show()
+            finish()
         })
 
 

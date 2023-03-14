@@ -99,7 +99,6 @@
             android:layout_marginTop="25dp"
             android:backgroundTint="#9F9F9F"
             android:foregroundTint="#858585"
-            android:indeterminateTint="#A1A1A1"
             android:progressBackgroundTint="#EFEFEF"
             android:progressTint="#FFB61D"
             app:layout_constraintEnd_toEndOf="parent"
