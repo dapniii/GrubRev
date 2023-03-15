@@ -1,11 +1,9 @@
 package com.mobdeve.s13.group5.grubrev
 
 import android.content.Intent
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +40,7 @@ class RestaurantActivity : AppCompatActivity() {
 
 
         //Filter Data to Current Restaurant
+        //val filteredReviews = filterToRestaurant(currResto)
         val filteredReviews = currResto?.let { filterToRestaurant(it) }
 
         //Restaurant Image
@@ -49,7 +48,8 @@ class RestaurantActivity : AppCompatActivity() {
 
         //Restaurant Details
         this.restaurantTv.text = currResto
-        this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it).toString() }
+        //this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
+        this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it)}
 
 
         //Restaurant Reviews
@@ -70,8 +70,9 @@ class RestaurantActivity : AppCompatActivity() {
         return reviewList.filter{it.restaurant == restaurant}
     }
 
-    private fun getAverageRating(filteredReviews: List<Review>): Double {
-        return filteredReviews.map{it.rating}.average()
+    private fun getAverageRating(filteredReviews: List<Review>): String {
+        val average = filteredReviews.map { it.rating }.average()
+        return String.format("%.1f", average)
     }
 
     private fun openAddReviewActivity() {
