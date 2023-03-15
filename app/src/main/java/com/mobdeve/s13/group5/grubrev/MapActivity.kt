@@ -35,13 +35,13 @@ class MapActivity : AppCompatActivity() {
 
         //TODO: Temp Access to Restaurant Activity
         this.yellowPinIv.setOnClickListener(View.OnClickListener {
-            openRestaurantActivity()
+            openRestaurantActivity("SecretAgno")
         })
         this.orangePinIv.setOnClickListener(View.OnClickListener {
-            openRestaurantActivity()
+            openRestaurantActivity("KainanKanto")
         })
         this.redPinIv.setOnClickListener(View.OnClickListener {
-            openRestaurantActivity()
+            openRestaurantActivity("KuboBistro")
         })
     }
 
@@ -51,8 +51,9 @@ class MapActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun openRestaurantActivity() {
+    private fun openRestaurantActivity(restaurant: String) {
         val intent = Intent(this, RestaurantActivity::class.java)
+        intent.putExtra("RESTAURANT", restaurant)
         startActivity(intent)
     }
 }

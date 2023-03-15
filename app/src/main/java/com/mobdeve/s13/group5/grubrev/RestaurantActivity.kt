@@ -24,7 +24,7 @@ class RestaurantActivity : AppCompatActivity() {
     private lateinit var backToMapIv: ImageView
 
     //TODO: Temp Restaurant
-    private var currResto = "SecretAgno"
+//    val currResto = intent.getStringExtra("RESTAURANT").toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +38,18 @@ class RestaurantActivity : AppCompatActivity() {
         this.restaurantRv = findViewById(R.id.restaurantRv)
         this.backToMapIv = findViewById(R.id.backToMapIv)
 
+        val currResto = this.intent.getStringExtra("RESTAURANT")
+
 
         //Filter Data to Current Restaurant
-        val filteredReviews = filterToRestaurant(currResto)
+        val filteredReviews = currResto?.let { filterToRestaurant(it) }
 
         //Restaurant Image
         this.restaurantIv.setImageResource(R.drawable.restaurant_placeholder)
 
         //Restaurant Details
         this.restaurantTv.text = currResto
-        this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
+        this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it).toString() }
 
 
         //Restaurant Reviews
