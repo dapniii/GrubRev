@@ -67,6 +67,14 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/userRestaurantTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="userRestaurantTv"
+                    android:textColor="#80000000"
+                    android:textSize="12sp" />
+
+                <TextView
                     android:id="@+id/commentTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
