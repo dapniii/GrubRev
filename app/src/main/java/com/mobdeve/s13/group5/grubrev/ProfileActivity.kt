@@ -20,9 +20,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var logoutBtn: Button
     private lateinit var backIv: ImageView
 
-    //TODO: Temp User
-    private val currUser: String = "Candice"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -37,9 +34,11 @@ class ProfileActivity : AppCompatActivity() {
         //Intent
         val resIntent = this.intent
         val showLogout = resIntent.getBooleanExtra("SHOW_LOGOUT", true)
+        val currUser = resIntent.getStringExtra("USERNAME").toString()
 
         //Account Details
-        this.usernameTv.text = currUser.toString()
+        this.usernameTv.text = currUser
+        //TODO: Temp
         this.dateTv.text = "Joined: 03/04/2023"
 
         //Filter Data to Current User

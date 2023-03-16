@@ -19,6 +19,7 @@ class MyReviewViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         reviewUserTv.setOnClickListener {
             val intent = Intent(itemView.context, ProfileActivity::class.java)
             intent.putExtra("SHOW_LOGOUT", false)
+            intent.putExtra("USERNAME", review.user)
             itemView.context.startActivity(intent)
         }
     }

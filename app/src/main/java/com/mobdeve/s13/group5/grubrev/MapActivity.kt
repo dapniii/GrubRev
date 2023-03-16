@@ -50,6 +50,7 @@ class MapActivity : AppCompatActivity() {
     private fun openProfileActivity() {
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("SHOW_LOGOUT", true)
+        intent.putExtra("USERNAME", "Candice")
         startActivity(intent)
     }
 
