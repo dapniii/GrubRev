@@ -34,6 +34,10 @@ class ProfileActivity : AppCompatActivity() {
         this.logoutBtn = findViewById(R.id.logoutBtn)
         this.backIv = findViewById(R.id.backIv)
 
+        //Intent
+        val resIntent = this.intent
+        val showLogout = resIntent.getBooleanExtra("SHOW_LOGOUT", true)
+
         //Account Details
         this.usernameTv.text = currUser.toString()
         this.dateTv.text = "Joined: 03/04/2023"
@@ -45,10 +49,15 @@ class ProfileActivity : AppCompatActivity() {
         this.recyclerView.adapter = MyReviewAdapter(filteredReviews as ArrayList<Review>)
         this.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        //OnCLick Logout, go back to Login Activity
-        this.logoutBtn.setOnClickListener(View.OnClickListener {
-            openMainActivity()
-        })
+
+        if (!showLogout) {
+            this.logoutBtn.visibility = View.GONE
+        } else {
+            //OnCLick Logout, go back to Login Activity
+            this.logoutBtn.setOnClickListener(View.OnClickListener {
+                openMainActivity()
+            })
+        }
 
         //OnCLick Back ImageView, finish current Profile Activity
         this.backIv.setOnClickListener(View.OnClickListener {

@@ -45,9 +45,11 @@ class MapActivity : AppCompatActivity() {
         })
     }
 
-    //TODO: Temp
+    //TODO: Temp - user data fetching stuff
+    //When opening ProfileActivity from MapActivity, show Logout button
     private fun openProfileActivity() {
         val intent = Intent(this, ProfileActivity::class.java)
+        intent.putExtra("SHOW_LOGOUT", true)
         startActivity(intent)
     }
 

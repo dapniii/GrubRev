@@ -36,7 +36,9 @@ class RestaurantActivity : AppCompatActivity() {
         this.restaurantRv = findViewById(R.id.restaurantRv)
         this.backToMapIv = findViewById(R.id.backToMapIv)
 
-        val currResto = this.intent.getStringExtra("RESTAURANT")
+        //Intents
+        val resIntent = this.intent
+        val currResto = resIntent.getStringExtra("RESTAURANT")
 
 
         //Filter Data to Current Restaurant
