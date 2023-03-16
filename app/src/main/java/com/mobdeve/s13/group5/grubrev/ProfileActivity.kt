@@ -46,7 +46,7 @@ class ProfileActivity : AppCompatActivity() {
         val filteredReviews = filterToUsername(currUser)
 
         //Account Reviews
-        this.recyclerView.adapter = MyReviewAdapter(filteredReviews as ArrayList<Review>)
+        this.recyclerView.adapter = MyPostAdapter(filteredReviews as ArrayList<Review>)
         this.recyclerView.layoutManager = LinearLayoutManager(this)
 
 

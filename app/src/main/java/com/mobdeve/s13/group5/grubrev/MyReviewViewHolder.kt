@@ -7,18 +7,16 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class MyReviewViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-    private val userTv: TextView = itemView.findViewById(R.id.userTv)
-    private val userRestaurantTv: TextView = itemView.findViewById(R.id.userRestaurantTv)
-    private val commentTv: TextView = itemView.findViewById(R.id.commentTv)
-    private val ratingTv: TextView = itemView.findViewById(R.id.ratingTv)
+    private val reviewUserTv: TextView = itemView.findViewById(R.id.reviewUserTv)
+    private val reviewCommentTv: TextView = itemView.findViewById(R.id.reviewCommentTv)
+    private val reviewRatingTv: TextView = itemView.findViewById(R.id.reviewRatingTv)
 
     fun bindData(review: Review) {
-        userTv.text = review.user
-        userRestaurantTv.text = "@" + review.restaurant
-        commentTv.text = review.comment
-        ratingTv.text = review.rating.toString()
+        reviewUserTv.text = review.user
+        reviewCommentTv.text = review.comment
+        reviewRatingTv.text = review.rating.toString()
 
-        userTv.setOnClickListener {
+        reviewUserTv.setOnClickListener {
             val intent = Intent(itemView.context, ProfileActivity::class.java)
             intent.putExtra("SHOW_LOGOUT", false)
             itemView.context.startActivity(intent)

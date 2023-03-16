@@ -34,7 +34,7 @@
                 app:srcCompat="@drawable/rating_box" />
 
             <TextView
-                android:id="@+id/postRatingTv"
+                android:id="@+id/reviewRatingTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -58,19 +58,20 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/postRestaurantTv"
+                    android:id="@+id/reviewUserTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="postRestaurantTv"
-                    android:textColor="#80000000"
-                    android:textSize="12sp" />
+                    android:clickable="true"
+                    android:text="reviewUserTv"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/postCommentTv"
+                    android:id="@+id/reviewCommentTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="postCommentTv \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    android:text="reviewCommentTv \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                     android:textColor="#000000" />
             </LinearLayout>
 
