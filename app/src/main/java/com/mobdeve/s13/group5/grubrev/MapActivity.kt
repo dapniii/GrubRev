@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import android.Manifest
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 
 class MapActivity : AppCompatActivity() {
@@ -53,6 +57,21 @@ class MapActivity : AppCompatActivity() {
         this.profileIv.setOnClickListener(View.OnClickListener {
             openProfileActivity()
         })
+        
+        //TODO: Request Permissions
+        val permissions = arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        ActivityCompat.requestPermissions(this, permissions, 0)
+
+
+        mapView.isMyLocationEnabled = true
+        val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
+        locationOverlay.enableMyLocation()
+        mapView.overlays.add(locationOverlay)
 
         //TODO: Temp Access to Restaurant Activity
 //        this.yellowPinIv.setOnClickListener(View.OnClickListener {
