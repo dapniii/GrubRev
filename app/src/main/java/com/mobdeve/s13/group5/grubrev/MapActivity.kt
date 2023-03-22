@@ -11,6 +11,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import android.Manifest
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
@@ -21,6 +22,7 @@ class MapActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
 
     //TODO: Temp
+    private val customMarkerList: ArrayList<CustomMarker> = DataHelper.initializeCustomMarker()
 //    private lateinit var yellowPinIv: ImageView
 //    private lateinit var orangePinIv: ImageView
 //    private lateinit var redPinIv: ImageView
@@ -48,10 +50,11 @@ class MapActivity : AppCompatActivity() {
         mapView.setMultiTouchControls(true)
 
         //Initialize Map Zoom Level and Position
+        //20 is Max Zoom and Location set to DLSU Agno
         val mapController = mapView.controller
-        mapController.setZoom(10.0)
-        // TODO: Temp Default Location - Berlin, Germany
-        mapController.setCenter(GeoPoint(52.5200, 13.4050))
+        mapController.setZoom(20.0)
+        val startPoint = GeoPoint(14.56638, 120.99250)
+        mapController.setCenter(startPoint)
 
         //OnClick Profile ImageView
         this.profileIv.setOnClickListener(View.OnClickListener {
@@ -68,10 +71,28 @@ class MapActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, permissions, 0)
 
 
-        mapView.isMyLocationEnabled = true
+//        mapView.isMyLocationEnabled = true
         val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
         locationOverlay.enableMyLocation()
         mapView.overlays.add(locationOverlay)
+
+
+        for (customMarker in customMarkerList) {
+            val osmMarker = Marker(mapView)
+            osmMarker.position = customMarker.location
+            osmMarker.title = customMarker.name
+            osmMarker.snippet = "Rating: ${customMarker.avgRating}"
+
+            when (customMarker.avgRating) {
+                in 0.0..1.9 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_red))
+                in 2.0..3.9 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_orange))
+                in 4.0..5.0 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_yellow))
+            }
+
+            mapView.overlays.add(osmMarker)
+        }
+
+        mapView.invalidate()
 
         //TODO: Temp Access to Restaurant Activity
 //        this.yellowPinIv.setOnClickListener(View.OnClickListener {
@@ -98,5 +119,9 @@ class MapActivity : AppCompatActivity() {
         val intent = Intent(this, RestaurantActivity::class.java)
         intent.putExtra("RESTAURANT", restaurant)
         startActivity(intent)
+    }
+
+    private fun setMarkers(mapView: MapView) {
+
     }
 }

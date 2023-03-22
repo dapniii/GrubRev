@@ -1,5 +1,7 @@
 package com.mobdeve.s13.group5.grubrev
 
+import org.osmdroid.util.GeoPoint
+
 class DataHelper {
     companion object {
         fun initializeData(): ArrayList<Review> {
@@ -102,6 +104,46 @@ class DataHelper {
                 )
             )
 
+            return data;
+        }
+
+        fun initializeCustomMarker(): ArrayList<CustomMarker> {
+            val data = ArrayList<CustomMarker>()
+            data.add(
+                CustomMarker(
+                    "SecretAgno",
+                    GeoPoint(14.56666, 120.99224),
+                    5.0
+                )
+            )
+            data.add(
+                CustomMarker(
+                    "KainanKanto",
+                    GeoPoint(14.56652, 120.99257),
+                    3.5
+                )
+            )
+            data.add(
+                CustomMarker(
+                    "KuboBistro",
+                    GeoPoint(14.56657, 120.99302),
+                    1.3
+                )
+            )
+            data.add(
+                CustomMarker(
+                    "AdoboKing",
+                    GeoPoint(14.56630, 120.99246),
+                    1.3
+                )
+            )
+            data.add(
+                CustomMarker(
+                    "Rice Inasal",
+                    GeoPoint(14.56690, 120.99282),
+                    1.3
+                )
+            )
 
             return data;
         }
