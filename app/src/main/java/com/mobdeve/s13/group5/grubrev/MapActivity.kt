@@ -21,11 +21,8 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
 
-    //TODO: Temp
+    //TODO: Temp(?)
     private val customMarkerList: ArrayList<CustomMarker> = DataHelper.initializeCustomMarker()
-//    private lateinit var yellowPinIv: ImageView
-//    private lateinit var orangePinIv: ImageView
-//    private lateinit var redPinIv: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +36,6 @@ class MapActivity : AppCompatActivity() {
         //Initialize
         this.profileIv = findViewById(R.id.profileIv)
         this.mapView = findViewById(R.id.mapView)
-        //TODO: Temp Initialize
-//        this.yellowPinIv = findViewById(R.id.yellowPinIv)
-//        this.orangePinIv = findViewById(R.id.orangePinIv)
-//        this.redPinIv = findViewById(R.id.redPinIv)
 
         //Setup OSM MapView Settings
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
@@ -60,7 +53,7 @@ class MapActivity : AppCompatActivity() {
         this.profileIv.setOnClickListener(View.OnClickListener {
             openProfileActivity()
         })
-        
+
         //TODO: Request Permissions
         val permissions = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -89,21 +82,15 @@ class MapActivity : AppCompatActivity() {
                 in 4.0..5.0 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_yellow))
             }
 
+            osmMarker.setOnMarkerClickListener { marker, mapView ->
+                openRestaurantActivity(customMarker.name)
+                true
+            }
+
             mapView.overlays.add(osmMarker)
         }
 
         mapView.invalidate()
-
-        //TODO: Temp Access to Restaurant Activity
-//        this.yellowPinIv.setOnClickListener(View.OnClickListener {
-//            openRestaurantActivity("SecretAgno")
-//        })
-//        this.orangePinIv.setOnClickListener(View.OnClickListener {
-//            openRestaurantActivity("KainanKanto")
-//        })
-//        this.redPinIv.setOnClickListener(View.OnClickListener {
-//            openRestaurantActivity("KuboBistro")
-//        })
     }
 
     //TODO: Temp - user data fetching stuff
