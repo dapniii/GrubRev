@@ -4,17 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 
 class MainActivity : AppCompatActivity() {
-//  Instantiate Variables
+    //  Instantiate Variables
     private lateinit var usernameEt : EditText
     private lateinit var passwordEt : EditText
     private lateinit var loginBtn : Button
     private lateinit var signupTv : TextView
+
+    //TODO: TEMP (only here for checking if user exists)
+    private val reviewList: ArrayList<Review> = DataHelper.initializeData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +33,37 @@ class MainActivity : AppCompatActivity() {
 
         //TODO: TEMP
         this.loginBtn.setOnClickListener((View.OnClickListener {
-            openMapActivity()
+            val username = usernameEt.text.toString()
+            val password = passwordEt.text.toString()
+
+            //Check if all fields are filled up
+            if (username.isNullOrBlank() ||
+                password.isNullOrBlank())  {
+                Toast.makeText(
+                    this,
+                    "ERROR: Please fill up all fields",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            //Check if user is registered
+            else if (!userExists(username)) {
+                Toast.makeText(
+                    this,
+                    "ERROR: Invalid username",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            //TODO: Check if password matches with username
+//            else if (!userExists(username)) {
+//                Toast.makeText(
+//                    this,
+//                    "ERROR: Invalid username",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+            else {
+                openMapActivity()
+            }
         }))
     }
 
@@ -49,5 +79,10 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MapActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    //Checks if user exists, returns boolean
+    private fun userExists(username : String) : Boolean {
+        return reviewList.any { it.user == username }
     }
 }
