@@ -80,6 +80,7 @@
                 android:hint="Password"
                 android:inputType="textShortMessage|textPassword"
                 android:paddingStart="15dp"
+                android:password="true"
                 android:textColor="#000000"
                 android:textColorHint="#80000000"
                 android:textSize="18sp" />
@@ -94,6 +95,7 @@
                 android:hint="Confirm Password"
                 android:inputType="textShortMessage|textPassword"
                 android:paddingStart="15dp"
+                android:password="true"
                 android:textColor="#000000"
                 android:textColorHint="#80000000"
                 android:textSize="18sp" />
