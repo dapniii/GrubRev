@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298265923115",
+    "project_id": "grubrev-f15e0",
+    "storage_bucket": "grubrev-f15e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298265923115:android:63c6ee81ad54b24b83246e",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s13.group5.grubrev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298265923115-eg88sp1m3ec9cot8ms56i4fr8s0rg6l6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK3d2XDspFFsGgbJ_-IKkr_IxvzeBb6Zk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298265923115-eg88sp1m3ec9cot8ms56i4fr8s0rg6l6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
