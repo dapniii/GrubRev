@@ -8,14 +8,18 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 
 class SignupActivity : AppCompatActivity() {
-    //  Instantiate Variables
+    //Instantiate Variables
     private lateinit var usernameEt : EditText
     private lateinit var passwordEt : EditText
     private lateinit var confirmPasswordEt : EditText
     private lateinit var signupBtn : Button
     private lateinit var loginTv : TextView
+
+    //Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
 
     //TODO: TEMP (only here for checking if user exists)
     private val reviewList: ArrayList<Review> = DataHelper.initializeData()
@@ -23,6 +27,9 @@ class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+
+        //Initialize Firebase
+        firebaseAuth = FirebaseAuth.getInstance()
 
         //Link Variables to xml Components
         this.usernameEt = findViewById(R.id.usernameEt)
@@ -36,49 +43,30 @@ class SignupActivity : AppCompatActivity() {
             openMainActivity()
         })
 
-        //TODO: Implement Proper Auth
+        //TODO: Implement Proper Error Checking
         this.signupBtn.setOnClickListener((View.OnClickListener {
             val username = usernameEt.text.toString()
             val password = passwordEt.text.toString()
             val confirmPassword = confirmPasswordEt.text.toString()
 
-            //Check if all fields are filled up
-            if (username.isNullOrBlank() ||
-                password.isNullOrBlank() ||
-                confirmPassword.isNullOrBlank())  {
+            val errorMessage = isError(username, password, confirmPassword)
+
+            if (errorMessage != null) {
                 Toast.makeText(
                     this,
-                    "ERROR: Please fill up all fields",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            //Check if user already exists
-            else if (userExists(username)) {
-                Toast.makeText(
-                    this,
-                    "ERROR: User $username already exists",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            //Check if password is more than or equal 8 characters
-            else if (password.length < 8) {
-                Toast.makeText(
-                    this,
-                    "ERROR: Password must be more than 8 characters",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            //Check if Password matches with Confirm Password
-            else if (password != confirmPassword) {
-                Toast.makeText(
-                    this,
-                    "ERROR: Passwords do not match",
+                    "ERROR: $errorMessage",
                     Toast.LENGTH_SHORT
                 ).show()
             }
             //Otherwise, approve sign in
             else {
-                openMapActivity()
+                firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener{
+                    if (it.isSuccessful) {
+                        openMapActivity()
+                    } else {
+                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }))
     }
@@ -100,5 +88,28 @@ class SignupActivity : AppCompatActivity() {
     //Checks if username already exists, returns boolean
     private fun userExists(username : String) : Boolean {
         return reviewList.any { it.user == username }
+    }
+
+    private fun isError(username : String, password : String, confirmPassword : String) : String? {
+        //Check if all fields are filled up
+        if (username.isNullOrBlank() ||
+            password.isNullOrBlank() ||
+            confirmPassword.isNullOrBlank())  {
+            return "Please fill up all fields"
+        }
+        //Check if user already exists
+        else if (userExists(username)) {
+            return "User $username already exists"
+        }
+        //Check if password is more than or equal 8 characters
+        else if (password.length < 8) {
+            return "Password must be more than 8 characters"
+        }
+        //Check if Password matches with Confirm Password
+        else if (password != confirmPassword) {
+            return "Passwords do not match"
+        } else {
+            return null
+        }
     }
 }
