@@ -9,6 +9,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -54,6 +56,7 @@ class ProfileActivity : AppCompatActivity() {
         } else {
             //OnCLick Logout, go back to Login Activity
             this.logoutBtn.setOnClickListener(View.OnClickListener {
+                Firebase.auth.signOut()
                 openMainActivity()
             })
         }
