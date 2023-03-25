@@ -9,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     //  Instantiate Variables
-    private lateinit var usernameEt : EditText
+    private lateinit var emailEt : EditText
     private lateinit var passwordEt : EditText
     private lateinit var loginBtn : Button
     private lateinit var signupTv : TextView
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         //Link Variables to xml Components
-        this.usernameEt = findViewById(R.id.usernameEt)
+        this.emailEt = findViewById(R.id.emailEt)
         this.passwordEt = findViewById(R.id.passwordEt)
         this.loginBtn = findViewById(R.id.loginBtn)
         this.signupTv = findViewById(R.id.signupTv)
@@ -40,10 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         //TODO: TEMP
         this.loginBtn.setOnClickListener((View.OnClickListener {
-            val username = usernameEt.text.toString()
+            val email = emailEt.text.toString()
             val password = passwordEt.text.toString()
 
-            val errorMessage = isError(username, password)
+            val errorMessage = isError(email, password)
             //Check if all fields are filled up
             if (errorMessage != null) {
                 Toast.makeText(
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 //                ).show()
 //            }
             else {
-                firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener{
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
                     if (it.isSuccessful) {
                         openMapActivity()
                     } else {

@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class SignupActivity : AppCompatActivity() {
     //Instantiate Variables
+    private lateinit var emailEt : EditText
     private lateinit var usernameEt : EditText
     private lateinit var passwordEt : EditText
     private lateinit var confirmPasswordEt : EditText
@@ -32,6 +33,7 @@ class SignupActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         //Link Variables to xml Components
+        this.emailEt = findViewById(R.id.emailEt)
         this.usernameEt = findViewById(R.id.usernameEt)
         this.passwordEt = findViewById(R.id.passwordEt)
         this.confirmPasswordEt = findViewById(R.id.confirmPasswordEt)
@@ -45,12 +47,14 @@ class SignupActivity : AppCompatActivity() {
 
         //TODO: Implement Proper Error Checking
         this.signupBtn.setOnClickListener((View.OnClickListener {
+            val email = emailEt.text.toString()
             val username = usernameEt.text.toString()
             val password = passwordEt.text.toString()
             val confirmPassword = confirmPasswordEt.text.toString()
 
-            val errorMessage = isError(username, password, confirmPassword)
+            val errorMessage = isError(email, username, password, confirmPassword)
 
+            //If there are errors, show corresponding error message
             if (errorMessage != null) {
                 Toast.makeText(
                     this,
@@ -58,11 +62,11 @@ class SignupActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            //Otherwise, approve sign in
+            //Otherwise, approve signup, notify user, and redirect back to Login Activity
             else {
-                firebaseAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener{
+                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
                     if (it.isSuccessful) {
-                        openMapActivity()
+                        openMainActivity()
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                     }
@@ -78,28 +82,13 @@ class SignupActivity : AppCompatActivity() {
         finish()
     }
 
-    //TODO: TEMP
-    private fun openMapActivity() {
-        val intent = Intent(this, MapActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    //Checks if username already exists, returns boolean
-    private fun userExists(username : String) : Boolean {
-        return reviewList.any { it.user == username }
-    }
-
-    private fun isError(username : String, password : String, confirmPassword : String) : String? {
+    private fun isError(email : String, username : String, password : String, confirmPassword : String) : String? {
         //Check if all fields are filled up
-        if (username.isNullOrBlank() ||
+        if (email.isNullOrBlank() ||
+            username.isNullOrBlank() ||
             password.isNullOrBlank() ||
             confirmPassword.isNullOrBlank())  {
             return "Please fill up all fields"
-        }
-        //Check if user already exists
-        else if (userExists(username)) {
-            return "User $username already exists"
         }
         //Check if password is more than or equal 8 characters
         else if (password.length < 8) {

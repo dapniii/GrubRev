@@ -2,119 +2,119 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/background"
+    android:background="@drawable/background_2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignupActivity">
-
-    <ImageView
-        android:id="@+id/logoIv"
-        android:layout_width="90dp"
-        android:layout_height="91dp"
-        app:layout_constraintBottom_toTopOf="@+id/SignupTv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.609"
-        app:srcCompat="@drawable/logo"
-        app:tint="#E03547" />
 
     <TextView
         android:id="@+id/SignupTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_marginTop="70dp"
         android:fontFamily="sans-serif-black"
-        android:text="SIGN UP"
-        android:textColor="#000000"
-        android:textSize="34sp"
+        android:text="Sign Up"
+        android:textColor="#212121"
+        android:textSize="60sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="337dp"
-        android:layout_height="440dp"
-        android:layout_marginTop="150dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SignupTv">
+
+        <EditText
+            android:id="@+id/emailEt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textPersonName"
+            android:outlineSpotShadowColor="@color/black"
+            android:paddingStart="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/usernameEt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Username"
+            android:inputType="textPersonName"
+            android:outlineSpotShadowColor="@color/black"
+            android:paddingStart="15dp"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/passwordEt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textShortMessage|textPassword"
+            android:paddingStart="15dp"
+            android:password="true"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/confirmPasswordEt"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_input"
+            android:ems="10"
+            android:hint="Confirm Password"
+            android:inputType="textShortMessage|textPassword"
+            android:paddingStart="15dp"
+            android:password="true"
+            android:textColor="#000000"
+            android:textColorHint="#80000000"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="232dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="#E03547"
+            android:fontFamily="sans-serif-black"
+            android:text="SIGN UP"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/usernameEt"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/custom_input"
-                android:ems="10"
-                android:hint="Username"
-                android:inputType="textPersonName"
-                android:outlineSpotShadowColor="@color/black"
-                android:paddingStart="15dp"
-                android:textColor="#000000"
-                android:textColorHint="#80000000"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/passwordEt"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/custom_input"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textShortMessage|textPassword"
-                android:paddingStart="15dp"
-                android:password="true"
-                android:textColor="#000000"
-                android:textColorHint="#80000000"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/confirmPasswordEt"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/custom_input"
-                android:ems="10"
-                android:hint="Confirm Password"
-                android:inputType="textShortMessage|textPassword"
-                android:paddingStart="15dp"
-                android:password="true"
-                android:textColor="#000000"
-                android:textColorHint="#80000000"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/signupBtn"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:backgroundTint="#E03547"
-                android:fontFamily="sans-serif-black"
-                android:text="SIGN UP"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:cornerRadius="8dp" />
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/questionTv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Already have an account?"
                 android:textAlignment="center"
@@ -122,16 +122,16 @@
 
             <TextView
                 android:id="@+id/loginTv"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="Login here!"
                 android:textAlignment="center"
                 android:textColor="#E03547"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
