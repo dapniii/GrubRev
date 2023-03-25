@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     //  Instantiate Variables
@@ -13,12 +14,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginBtn : Button
     private lateinit var signupTv : TextView
 
+    //Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
+
     //TODO: TEMP (only here for checking if user exists)
     private val reviewList: ArrayList<Review> = DataHelper.initializeData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Initialize Firebase
+        firebaseAuth = FirebaseAuth.getInstance()
 
         //Link Variables to xml Components
         this.usernameEt = findViewById(R.id.usernameEt)
@@ -36,23 +43,23 @@ class MainActivity : AppCompatActivity() {
             val username = usernameEt.text.toString()
             val password = passwordEt.text.toString()
 
+            val errorMessage = isError(username, password)
             //Check if all fields are filled up
-            if (username.isNullOrBlank() ||
-                password.isNullOrBlank())  {
+            if (errorMessage != null) {
                 Toast.makeText(
                     this,
-                    "ERROR: Please fill up all fields",
+                    "ERROR: $errorMessage",
                     Toast.LENGTH_SHORT
                 ).show()
             }
             //Check if user is registered
-            else if (!userExists(username)) {
-                Toast.makeText(
-                    this,
-                    "ERROR: Invalid username",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+//            else if (!userExists(username)) {
+//                Toast.makeText(
+//                    this,
+//                    "ERROR: Invalid username",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
             //TODO: Check if password matches with username
 //            else if (!userExists(username)) {
 //                Toast.makeText(
@@ -62,9 +69,23 @@ class MainActivity : AppCompatActivity() {
 //                ).show()
 //            }
             else {
-                openMapActivity()
+                firebaseAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener{
+                    if (it.isSuccessful) {
+                        openMapActivity()
+                    } else {
+                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }))
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (firebaseAuth.currentUser != null) {
+            openMapActivity()
+        }
     }
 
     //Opens SignupActivity and finishes MainActivity
@@ -84,5 +105,15 @@ class MainActivity : AppCompatActivity() {
     //Checks if user exists, returns boolean
     private fun userExists(username : String) : Boolean {
         return reviewList.any { it.user == username }
+    }
+
+    private fun isError(username : String, password : String) : String? {
+        //Check if all fields are filled up
+        if (username.isNullOrBlank() ||
+            password.isNullOrBlank()) {
+            return "Please fill up all fields"
+        } else {
+            return null
+        }
     }
 }
