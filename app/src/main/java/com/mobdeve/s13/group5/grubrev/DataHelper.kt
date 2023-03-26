@@ -134,7 +134,7 @@ class DataHelper {
                 CustomMarker(
                     "Adobo King",
                     GeoPoint(14.56630, 120.99246),
-                    null
+                    0.0
                 )
             )
             data.add(
