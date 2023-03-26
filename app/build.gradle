@@ -47,4 +47,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     //OpenStreetMap
     implementation 'org.osmdroid:osmdroid-android:6.1.12'
+    //Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 }

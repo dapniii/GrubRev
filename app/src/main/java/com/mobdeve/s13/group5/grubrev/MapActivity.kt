@@ -12,8 +12,16 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues.TAG
+import android.os.ProxyFileDescriptorCallback
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -25,8 +33,10 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var profileActivityResultLauncher: ActivityResultLauncher<Intent>
 
+    private var firebaseDb = Firebase.firestore
+//    private var customMarkerList: ArrayList<CustomMarker> = ArrayList()
 
-    //TODO: Temp(?)
+    //Temp, local hardcoded markers
     private val customMarkerList: ArrayList<CustomMarker> = DataHelper.initializeCustomMarker()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +52,11 @@ class MapActivity : AppCompatActivity() {
         this.profileIv = findViewById(R.id.profileIv)
         this.mapView = findViewById(R.id.mapView)
 
-        //Checks if user pressed Logout button from profile activity
-        //if user clicked logout, finish MapActivity and reopen MainActivity (login page)
+        //Record markers to database
+//        setMarkerstoDB(customMarkerList)
+
+      /*Checks if user pressed Logout button from profile activity
+        if user clicked logout, finish MapActivity and reopen MainActivity (login page)*/
         profileActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = Intent(this, MainActivity::class.java)
@@ -79,35 +92,39 @@ class MapActivity : AppCompatActivity() {
         )
         ActivityCompat.requestPermissions(this, permissions, 0)
 
-        //5. TODO: not yet working, user current location
-//        mapView.isMyLocationEnabled = true
+        //5. TODO: TENTATIVE user current location
+        //mapView.isMyLocationEnabled = true
         val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
         locationOverlay.enableMyLocation()
         mapView.overlays.add(locationOverlay)
 
         //6. Print out all custom markers to map
-        for (customMarker in customMarkerList) {
-            val osmMarker = Marker(mapView)
-            osmMarker.position = customMarker.location
-            osmMarker.title = customMarker.name
-            osmMarker.snippet = "Rating: ${customMarker.avgRating}"
+        loadMarkers { customMarkers ->
+            Log.d(TAG, "customMarkerList: $customMarkerList")
+            for (customMarker in customMarkerList) {
+                val osmMarker = Marker(mapView)
+                osmMarker.position = customMarker.location
+                osmMarker.title = customMarker.name
+                osmMarker.snippet = "Rating: ${customMarker.avgRating}"
 
-            //Assign corresponding color depending on restaurant's average rating
-            when (customMarker.avgRating) {
-                in 0.0..1.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_red)
-                in 2.0..3.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_orange)
-                in 4.0..5.0 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_yellow)
+                //Assign corresponding color depending on restaurant's average rating
+                when (customMarker.avgRating) {
+                    in 0.0..1.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_red)
+                    in 2.0..3.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_orange)
+                    in 4.0..5.0 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_yellow)
+                }
+                //When marker is clicked, open RestaurantActivity with its corresponding restaurant
+                osmMarker.setOnMarkerClickListener { marker, mapView ->
+                    openRestaurantActivity(customMarker.name)
+                    true
+                }
+                //adds the markers on top of the map
+                mapView.overlays.add(osmMarker)
             }
-            //When marker is clicked, open RestaurantActivity with its corresponding restaurant
-            osmMarker.setOnMarkerClickListener { marker, mapView ->
-                openRestaurantActivity(customMarker.name)
-                true
-            }
-            //adds the markers on top of the map
-            mapView.overlays.add(osmMarker)
+
+            mapView.invalidate()
         }
 
-        mapView.invalidate()
         // * * * OpenStreetMap * * * />
     }
 
@@ -127,7 +144,106 @@ class MapActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setMarkers(mapView: MapView) {
+    //This is a temp function only to be ran once to instantiate the marker data to the db
+    private fun setMarkerstoDB(customMarkerList: ArrayList<CustomMarker>) {
+        for (customMarker in customMarkerList) {
+            val markerData = hashMapOf(
+                "name" to customMarker.name,
+                "location" to customMarker.location,
+                "avgRating" to customMarker.avgRating
+            )
 
+            firebaseDb.collection("markers").add(markerData)
+                //Notify if marker added to db
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "Marker added to Firestore with ID: ${documentReference.id}")
+                }
+                //Notify if marker wasn't added to db
+                .addOnFailureListener { error ->
+                    Log.d(TAG, "Error adding marker to Firestore: $error")
+                }
+        }
     }
+
+    private fun loadMarkers(callback: (ArrayList<CustomMarker>) -> Unit) {
+        val customMarkers = arrayListOf<CustomMarker>()
+
+        firebaseDb.collection("markers").get()
+            .addOnSuccessListener { storedMarkers ->
+                for (storedMarker in storedMarkers) {
+                    val name = storedMarker["name"] as String
+                    val locationHash = storedMarker["location"] as HashMap<*, *>
+                    val location = GeoPoint(locationHash["latitude"] as Double,
+                                            locationHash["longitude"] as Double)
+                    val avgRating = storedMarker["avgRating"] as Double
+
+                    val customMarker = CustomMarker(name, location, avgRating)
+                    customMarkers.add(customMarker)
+                    Log.d(TAG, "Marker added to List: $customMarker")
+                }
+                callback(customMarkers)
+            }
+            .addOnFailureListener {error ->
+                Log.d(TAG, "ERROR: $error")
+            }
+    }
+
+    /*private fun OLDsetMarkerstoDB(customMarkerList: ArrayList<CustomMarker>) {
+        for (customMarker in customMarkerList) {
+            firebaseDb.collection("markers").document().set(customMarker)
+                //Notify if marker added to db
+                .addOnSuccessListener {
+                    Log.d(TAG, "Marker added to Firestore: $customMarker")
+                }
+                //Notify if marker wasn't added to db
+                .addOnFailureListener {
+                    Log.d(TAG, "Error adding marker to Firestore")
+                }
+        }
+    }*/
+
+    /*private suspend fun OLDloadMarkers(): ArrayList<CustomMarker> {
+        val customMarkers : ArrayList<CustomMarker> = ArrayList()
+
+        try {
+            val storedMarkers = firebaseDb.collection("markers").get().await()
+
+            for (storedMarker in storedMarkers) {
+                val name = storedMarker.getString("name") ?: ""
+                val location = storedMarker.getGeoPoint("location") ?: GeoPoint(0.0, 0.0)
+                val avgRating = storedMarker.getDouble("avgRating") ?: 0.0
+
+                val customMarker = CustomMarker(name, location as GeoPoint, avgRating)
+                customMarkers.add(customMarker)
+                Log.d(TAG, "Marker added to List: $customMarker")
+            }
+        } catch (error : Exception) {
+            Log.d(TAG, "ERROR: $error")
+        }
+
+        return customMarkers
+    }*/
+
+    /*private fun MoreOldloadMarkers(callback: (ArrayList<CustomMarker>) -> Unit) {
+        firebaseDb.collection("markers").get()
+            .addOnSuccessListener { storedMarkers ->
+                val customMarkers : ArrayList<CustomMarker> = ArrayList()
+                for (storedMarker in storedMarkers) {
+                    val name = storedMarker.getString("name") ?: ""
+                    val location : GeoPoint =
+                        (storedMarker.getGeoPoint("location") ?: GeoPoint(0.0, 0.0)) as GeoPoint
+                    val avgRating = storedMarker.getDouble("avgRating") ?: 0.0
+
+                    val customMarker = CustomMarker(name, location, avgRating)
+                    customMarkers.add(customMarker)
+                    Log.d(TAG, "Marker added to List: $customMarker")
+                }
+                callback(customMarkers)
+
+            }
+            .addOnFailureListener { error ->
+                Log.d(TAG, "Marker Error: $error")
+                callback(ArrayList())
+            }
+        }*/
 }
