@@ -9,18 +9,21 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity() {
     //Instantiate Variables
-    private lateinit var emailEt : EditText
-    private lateinit var usernameEt : EditText
-    private lateinit var passwordEt : EditText
-    private lateinit var confirmPasswordEt : EditText
-    private lateinit var signupBtn : Button
-    private lateinit var loginTv : TextView
+    private lateinit var emailEt: EditText
+    private lateinit var usernameEt: EditText
+    private lateinit var passwordEt: EditText
+    private lateinit var confirmPasswordEt: EditText
+    private lateinit var signupBtn: Button
+    private lateinit var loginTv: TextView
 
     //Firebase
     private lateinit var firebaseAuth: FirebaseAuth
+    private var firebaseDb = Firebase.firestore
 
     //TODO: TEMP (only here for checking if user exists)
     private val reviewList: ArrayList<Review> = DataHelper.initializeData()
@@ -31,6 +34,7 @@ class SignupActivity : AppCompatActivity() {
 
         //Initialize Firebase
         firebaseAuth = FirebaseAuth.getInstance()
+
 
         //Link Variables to xml Components
         this.emailEt = findViewById(R.id.emailEt)
@@ -64,13 +68,7 @@ class SignupActivity : AppCompatActivity() {
             }
             //Otherwise, approve signup, notify user, and redirect back to Login Activity
             else {
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-                    if (it.isSuccessful) {
-                        openMainActivity()
-                    } else {
-                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                    }
-                }
+                createAccount(email, username, password)
             }
         }))
     }
@@ -82,12 +80,18 @@ class SignupActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun isError(email : String, username : String, password : String, confirmPassword : String) : String? {
+    private fun isError(
+        email: String,
+        username: String,
+        password: String,
+        confirmPassword: String
+    ): String? {
         //Check if all fields are filled up
         if (email.isNullOrBlank() ||
             username.isNullOrBlank() ||
             password.isNullOrBlank() ||
-            confirmPassword.isNullOrBlank())  {
+            confirmPassword.isNullOrBlank()
+        ) {
             return "Please fill up all fields"
         }
         //Check if password is more than or equal 8 characters
@@ -99,6 +103,45 @@ class SignupActivity : AppCompatActivity() {
             return "Passwords do not match"
         } else {
             return null
+        }
+    }
+
+    //Create New Account
+    private fun createAccount(email: String, username: String, password: String) {
+        //Create new account with email and password
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+
+            //If account successfully created
+            if (it.isSuccessful) {
+
+                //< * * * Storing User Data * * *
+                //1. Get new user's details
+                val currUserID = firebaseAuth.currentUser!!.uid
+                val userMap = hashMapOf(
+                    "userID" to currUserID,
+                    "username" to username
+                )
+
+                firebaseDb.collection("users").document(currUserID).set(userMap)
+                    //Notify user if registered successfully and go back to Login page
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Registered Successfully", Toast.LENGTH_SHORT).show()
+                        openMainActivity()
+                    }
+                    //Notify user if register failed
+                    .addOnFailureListener {
+                        Toast.makeText(this, "ERROR: Failed to Register", Toast.LENGTH_SHORT).show()
+                    }
+                // * * * Storing User Data * * * />
+
+                //After successfully creating new acc and storing other details to database
+                //Redirect user to Login, if user session is retained after sign up
+                //it will automatically redirect to MapActivity
+            } else {
+                //Show specific error
+                //Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
