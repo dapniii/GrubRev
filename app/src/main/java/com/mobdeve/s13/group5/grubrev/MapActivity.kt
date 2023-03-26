@@ -11,6 +11,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import android.Manifest
+import android.app.Activity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -18,8 +21,10 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 class MapActivity : AppCompatActivity() {
     private lateinit var profileIv: ImageView
-
     private lateinit var mapView: MapView
+
+    private lateinit var profileActivityResultLauncher: ActivityResultLauncher<Intent>
+
 
     //TODO: Temp(?)
     private val customMarkerList: ArrayList<CustomMarker> = DataHelper.initializeCustomMarker()
@@ -27,34 +32,45 @@ class MapActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize OpenStreetMap library
+        //1. Initialize OpenStreetMap library
+        //needs to be before setContentView
         Configuration.getInstance().load(this, getSharedPreferences("OpenStreetMap", MODE_PRIVATE))
 
-        //Set Activity Layout
         setContentView(R.layout.activity_map)
 
         //Initialize
         this.profileIv = findViewById(R.id.profileIv)
         this.mapView = findViewById(R.id.mapView)
 
-        //Setup OSM MapView Settings
-        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
-        mapView.setBuiltInZoomControls(true)
-        mapView.setMultiTouchControls(true)
-
-        //Initialize Map Zoom Level and Position
-        //20 is Max Zoom and Location set to DLSU Agno
-        val mapController = mapView.controller
-        mapController.setZoom(20.0)
-        val startPoint = GeoPoint(14.56638, 120.99250)
-        mapController.setCenter(startPoint)
+        //Checks if user pressed Logout button from profile activity
+        //if user clicked logout, finish MapActivity and reopen MainActivity (login page)
+        profileActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
 
         //OnClick Profile ImageView
         this.profileIv.setOnClickListener(View.OnClickListener {
             openProfileActivity()
         })
 
-        //TODO: Request Permissions
+        //< * * * OpenStreetMap * * *
+        //2. Setup OSM MapView Settings
+        mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)
+        mapView.setBuiltInZoomControls(true)
+        mapView.setMultiTouchControls(true)
+
+        //3. Initialize Map Zoom Level and Position
+        //20 is Max Zoom and Location set to DLSU Agno
+        val mapController = mapView.controller
+        mapController.setZoom(20.0)
+        val startPoint = GeoPoint(14.56638, 120.99250)
+        mapController.setCenter(startPoint)
+
+        //4. Request permissions from User to access location
         val permissions = arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -63,43 +79,46 @@ class MapActivity : AppCompatActivity() {
         )
         ActivityCompat.requestPermissions(this, permissions, 0)
 
-
+        //5. TODO: not yet working, user current location
 //        mapView.isMyLocationEnabled = true
         val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
         locationOverlay.enableMyLocation()
         mapView.overlays.add(locationOverlay)
 
-
+        //6. Print out all custom markers to map
         for (customMarker in customMarkerList) {
             val osmMarker = Marker(mapView)
             osmMarker.position = customMarker.location
             osmMarker.title = customMarker.name
             osmMarker.snippet = "Rating: ${customMarker.avgRating}"
 
+            //Assign corresponding color depending on restaurant's average rating
             when (customMarker.avgRating) {
-                in 0.0..1.9 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_red))
-                in 2.0..3.9 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_orange))
-                in 4.0..5.0 -> osmMarker.setIcon(resources.getDrawable(R.drawable.pin_yellow))
+                in 0.0..1.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_red)
+                in 2.0..3.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_orange)
+                in 4.0..5.0 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_yellow)
             }
-
+            //When marker is clicked, open RestaurantActivity with its corresponding restaurant
             osmMarker.setOnMarkerClickListener { marker, mapView ->
                 openRestaurantActivity(customMarker.name)
                 true
             }
-
+            //adds the markers on top of the map
             mapView.overlays.add(osmMarker)
         }
 
         mapView.invalidate()
+        // * * * OpenStreetMap * * * />
     }
 
     //TODO: Temp - user data fetching stuff
+
     //When opening ProfileActivity from MapActivity, show Logout button
     private fun openProfileActivity() {
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("SHOW_LOGOUT", true)
         intent.putExtra("USERNAME", "Candice")
-        startActivity(intent)
+        profileActivityResultLauncher.launch(intent)
     }
 
     private fun openRestaurantActivity(restaurant: String) {

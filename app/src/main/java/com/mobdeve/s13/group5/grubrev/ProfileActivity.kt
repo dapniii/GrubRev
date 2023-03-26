@@ -1,5 +1,6 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -70,8 +71,8 @@ class ProfileActivity : AppCompatActivity() {
 
     //Opens MainActivity and finishes SignupActivity
     private fun openMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        val intent = Intent()
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 
