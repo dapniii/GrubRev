@@ -34,9 +34,8 @@ class MapActivity : AppCompatActivity() {
     private lateinit var profileActivityResultLauncher: ActivityResultLauncher<Intent>
 
     private var firebaseDb = Firebase.firestore
-//    private var customMarkerList: ArrayList<CustomMarker> = ArrayList()
 
-    //Temp, local hardcoded markers
+    //Temp, hardcoded marker data from DataHelper
     private val customMarkerList: ArrayList<CustomMarker> = DataHelper.initializeCustomMarker()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,10 +97,11 @@ class MapActivity : AppCompatActivity() {
         locationOverlay.enableMyLocation()
         mapView.overlays.add(locationOverlay)
 
-        //6. Print out all custom markers to map
+        //Awaits loadMarkers function to finish before proceeding to print markers
         loadMarkers { customMarkers ->
-            Log.d(TAG, "customMarkerList: $customMarkerList")
-            for (customMarker in customMarkerList) {
+            Log.d(TAG, "customMarkers: $customMarkers")
+            //6. Print out all custom markers to map
+            for (customMarker in customMarkers) {
                 val osmMarker = Marker(mapView)
                 osmMarker.position = customMarker.location
                 osmMarker.title = customMarker.name
@@ -113,6 +113,7 @@ class MapActivity : AppCompatActivity() {
                     in 2.0..3.9 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_orange)
                     in 4.0..5.0 -> osmMarker.icon = resources.getDrawable(R.drawable.pin_yellow)
                 }
+                Log.d(TAG, "currRating: ${customMarker.avgRating}")
                 //When marker is clicked, open RestaurantActivity with its corresponding restaurant
                 osmMarker.setOnMarkerClickListener { marker, mapView ->
                     openRestaurantActivity(customMarker.name)
@@ -124,11 +125,8 @@ class MapActivity : AppCompatActivity() {
 
             mapView.invalidate()
         }
-
         // * * * OpenStreetMap * * * />
     }
-
-    //TODO: Temp - user data fetching stuff
 
     //When opening ProfileActivity from MapActivity, show Logout button
     private fun openProfileActivity() {
@@ -175,7 +173,12 @@ class MapActivity : AppCompatActivity() {
                     val locationHash = storedMarker["location"] as HashMap<*, *>
                     val location = GeoPoint(locationHash["latitude"] as Double,
                                             locationHash["longitude"] as Double)
-                    val avgRating = storedMarker["avgRating"] as Double
+                    val avgRating = if (storedMarker["avgRating"] is Long) {
+                        (storedMarker["avgRating"] as Long).toDouble()
+                    } else {
+                        storedMarker["avgRating"] as Double
+                    }
+
 
                     val customMarker = CustomMarker(name, location, avgRating)
                     customMarkers.add(customMarker)
