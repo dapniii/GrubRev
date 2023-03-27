@@ -59,7 +59,7 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         })
 
-        getCurrentUser { currUser ->
+        getUsername { currUser ->
             //Account Details
             this.usernameTv.text = currUser
             //TODO: Temp
@@ -87,7 +87,7 @@ class ProfileActivity : AppCompatActivity() {
         return reviewList.filter{it.user == username}
     }
 
-    private fun getCurrentUser(callback: (String) -> Unit) {
+    private fun getUsername(callback: (String) -> Unit) {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val db = FirebaseFirestore.getInstance()
 

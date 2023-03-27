@@ -1,13 +1,18 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.content.ContentValues
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AddReviewActivity : AppCompatActivity() {
 
@@ -28,28 +33,70 @@ class AddReviewActivity : AppCompatActivity() {
         this.cancelBtn = findViewById(R.id.cancelBtn)
         this.sendBtn = findViewById(R.id.sendBtn)
 
+        //Intents
+        val resIntent = this.intent
+        val currResto = resIntent.getStringExtra("RESTAURANT")
 
-        //OnClick
+        //Cancelling Add Review
         this.backToRestoIv.setOnClickListener(View.OnClickListener {
             finish()
         })
-
         this.cancelBtn.setOnClickListener(View.OnClickListener {
             finish()
         })
-        //TODO: Temp
-//        this.sendBtn.setOnClickListener(View.OnClickListener {
-//            finish()
-//        })
+
+        //< * * * Adding Review * * *
         this.sendBtn.setOnClickListener(View.OnClickListener {
-            Toast.makeText(
-                this@AddReviewActivity,
-                "Rating is: "+addRatingRb.rating,
-                Toast.LENGTH_SHORT
-            ).show()
-            finish()
+            //1. Get inputs
+            val comment = addCommentEt.text.toString()
+            val rating = addRatingRb.rating.toDouble()
+
+            //2. Get current user's username
+            getUsername { currUser ->
+                //3. Once username taken, add new review to db
+                addReview(currResto!!, currUser, comment, rating)
+            }
+
         })
+        // * * * Adding Review * * * />
 
 
+    }
+
+    private fun getUsername(callback: (String) -> Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+
+        var currUser = ""
+
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                if (doc != null) {
+                    currUser = doc.getString("username").toString()
+                    callback(currUser)
+                } else {
+                    Log.d(ContentValues.TAG, "How did you manage to do this?")
+                }
+            }
+            .addOnFailureListener { error ->
+                Log.d(ContentValues.TAG, "ERROR: $error")
+            }
+    }
+
+    private fun addReview(restaurant: String, username: String, comment: String, rating: Double) {
+        val db = FirebaseFirestore.getInstance()
+
+        val newReview = Review(restaurant, username, comment, rating)
+        db.collection("reviews").add(newReview)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "Review added to Firestore with ID: ${documentReference.id}")
+                Toast.makeText(this, "Review Successfully Added", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            //Notify if marker wasn't added to db
+            .addOnFailureListener { error ->
+                Log.d(TAG, "Error adding review to Firestore: $error")
+                Toast.makeText(this, "Failed to Add Review", Toast.LENGTH_SHORT).show()
+            }
     }
 }
