@@ -1,16 +1,20 @@
 package com.mobdeve.s13.group5.grubrev
 
 import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class ProfileActivity : AppCompatActivity() {
@@ -37,19 +41,7 @@ class ProfileActivity : AppCompatActivity() {
         //Intent
         val resIntent = this.intent
         val showLogout = resIntent.getBooleanExtra("SHOW_LOGOUT", true)
-        val currUser = resIntent.getStringExtra("USERNAME").toString()
-
-        //Account Details
-        this.usernameTv.text = currUser
-        //TODO: Temp
-        this.dateTv.text = "Joined: 03/04/2023"
-
-        //Filter Data to Current User
-        val filteredReviews = filterToUsername(currUser)
-
-        //Account Reviews
-        this.recyclerView.adapter = MyPostAdapter(filteredReviews as ArrayList<Review>)
-        this.recyclerView.layoutManager = LinearLayoutManager(this)
+//        val currUser = resIntent.getStringExtra("USERNAME").toString()
 
 
         if (!showLogout) {
@@ -67,6 +59,20 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         })
 
+        getCurrentUser { currUser ->
+            //Account Details
+            this.usernameTv.text = currUser
+            //TODO: Temp
+            this.dateTv.text = "Joined: 03/04/2023"
+
+            //Filter Data to Current User
+            val filteredReviews = filterToUsername(currUser)
+
+            //Account Reviews
+            this.recyclerView.adapter = MyPostAdapter(filteredReviews as ArrayList<Review>)
+            this.recyclerView.layoutManager = LinearLayoutManager(this)
+        }
+
     }
 
     //Opens MainActivity and finishes SignupActivity
@@ -79,5 +85,25 @@ class ProfileActivity : AppCompatActivity() {
     //Filter Review Data based on Username
     private fun filterToUsername(username: String): List<Review> {
         return reviewList.filter{it.user == username}
+    }
+
+    private fun getCurrentUser(callback: (String) -> Unit) {
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val db = FirebaseFirestore.getInstance()
+
+        var currUser = ""
+
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                if (doc != null) {
+                    currUser = doc.getString("username").toString()
+                    callback(currUser)
+                } else {
+                    Log.d(TAG, "How did you manage to do this?")
+                }
+            }
+            .addOnFailureListener { error ->
+                Log.d(TAG, "ERROR: $error")
+            }
     }
 }

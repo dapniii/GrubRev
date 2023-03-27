@@ -54,8 +54,8 @@ class MapActivity : AppCompatActivity() {
         //Record markers to database
 //        setMarkerstoDB(customMarkerList)
 
-      /*Checks if user pressed Logout button from profile activity
-        if user clicked logout, finish MapActivity and reopen MainActivity (login page)*/
+        /*Checks if user pressed Logout button from profile activity
+          if user clicked logout, finish MapActivity and reopen MainActivity (login page)*/
         profileActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = Intent(this, MainActivity::class.java)
@@ -132,7 +132,7 @@ class MapActivity : AppCompatActivity() {
     private fun openProfileActivity() {
         val intent = Intent(this, ProfileActivity::class.java)
         intent.putExtra("SHOW_LOGOUT", true)
-        intent.putExtra("USERNAME", "Candice")
+//        intent.putExtra("USERNAME", "Candice")
         profileActivityResultLauncher.launch(intent)
     }
 
@@ -172,7 +172,7 @@ class MapActivity : AppCompatActivity() {
                     val name = storedMarker["name"] as String
                     val locationHash = storedMarker["location"] as HashMap<*, *>
                     val location = GeoPoint(locationHash["latitude"] as Double,
-                                            locationHash["longitude"] as Double)
+                        locationHash["longitude"] as Double)
                     val avgRating = if (storedMarker["avgRating"] is Long) {
                         (storedMarker["avgRating"] as Long).toDouble()
                     } else {
@@ -184,7 +184,7 @@ class MapActivity : AppCompatActivity() {
                     customMarkers.add(customMarker)
                     Log.d(TAG, "Marker added to List: $customMarker")
                 }
-                callback(customMarkers)
+                callback(customMarkers) //kind of like return, but async
             }
             .addOnFailureListener {error ->
                 Log.d(TAG, "ERROR: $error")
