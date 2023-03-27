@@ -1,14 +1,18 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class RestaurantActivity : AppCompatActivity() {
 
@@ -20,6 +24,9 @@ class RestaurantActivity : AppCompatActivity() {
     private lateinit var addCommentBtn: FloatingActionButton
     private lateinit var restaurantRv: RecyclerView
     private lateinit var backToMapIv: ImageView
+
+    //Firebase
+    private var firebaseDb = Firebase.firestore
 
     //TODO: Temp Restaurant
 //    val currResto = intent.getStringExtra("RESTAURANT").toString()
@@ -80,6 +87,28 @@ class RestaurantActivity : AppCompatActivity() {
     private fun openAddReviewActivity() {
         val intent = Intent(this, AddReviewActivity::class.java)
         startActivity(intent)
+    }
+
+    //This is a temp function only to be ran once to populate db with review data
+    private fun setReviewstoDB(reviewList: ArrayList<Review>) {
+        for (review in reviewList) {
+            val reviewData = hashMapOf(
+                "restaurant" to review.restaurant,
+                "user" to review.user,
+                "comment" to review.comment,
+                "rating" to review.rating
+            )
+
+            firebaseDb.collection("reviews").add(reviewData)
+                //Notify if marker added to db
+                .addOnSuccessListener { documentReference ->
+                    Log.d(ContentValues.TAG, "Review added to Firestore with ID: ${documentReference.id}")
+                }
+                //Notify if marker wasn't added to db
+                .addOnFailureListener { error ->
+                    Log.d(ContentValues.TAG, "Error adding review to Firestore: $error")
+                }
+        }
     }
 
 }
