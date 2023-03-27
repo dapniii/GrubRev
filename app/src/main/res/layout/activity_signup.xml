@@ -14,7 +14,7 @@
         android:layout_marginTop="70dp"
         android:fontFamily="sans-serif-black"
         android:text="Sign Up"
-        android:textColor="#212121"
+        android:textColor="#FFFFFF"
         android:textSize="60sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
