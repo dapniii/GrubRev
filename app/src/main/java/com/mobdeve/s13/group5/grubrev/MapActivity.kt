@@ -13,15 +13,11 @@ import org.osmdroid.views.MapView
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues.TAG
-import android.os.ProxyFileDescriptorCallback
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
@@ -98,7 +94,7 @@ class MapActivity : AppCompatActivity() {
         mapView.overlays.add(locationOverlay)
 
         //Awaits loadMarkers function to finish before proceeding to print markers
-        loadMarkers { customMarkers ->
+        getMarkers { customMarkers ->
             Log.d(TAG, "customMarkers: $customMarkers")
             //6. Print out all custom markers to map
             for (customMarker in customMarkers) {
@@ -142,7 +138,7 @@ class MapActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    //This is a temp function only to be ran once to instantiate the marker data to the db
+    //This is a temp function only to be ran once to populate db with marker data
     private fun setMarkerstoDB(customMarkerList: ArrayList<CustomMarker>) {
         for (customMarker in customMarkerList) {
             val markerData = hashMapOf(
@@ -163,7 +159,7 @@ class MapActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadMarkers(callback: (ArrayList<CustomMarker>) -> Unit) {
+    private fun getMarkers(callback: (ArrayList<CustomMarker>) -> Unit) {
         val customMarkers = arrayListOf<CustomMarker>()
 
         firebaseDb.collection("markers").get()
