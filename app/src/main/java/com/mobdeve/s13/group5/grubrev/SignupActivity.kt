@@ -107,6 +107,10 @@ class SignupActivity : AppCompatActivity() {
     }
 
     //Create New Account
+    /*TODO:
+       1. Check if username taken
+       2. fix error messages, dont show raw firebase error messages
+     */
     private fun createAccount(email: String, username: String, password: String) {
         //Create new account with email and password
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
