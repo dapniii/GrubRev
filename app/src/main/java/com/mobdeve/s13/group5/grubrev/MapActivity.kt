@@ -139,7 +139,7 @@ class MapActivity : AppCompatActivity() {
     }
 
     //This is a temp function only to be ran once to populate db with marker data
-    private fun setMarkerstoDB(customMarkerList: ArrayList<CustomMarker>) {
+    private fun addMarkerstoDB(customMarkerList: ArrayList<CustomMarker>) {
         for (customMarker in customMarkerList) {
             val markerData = hashMapOf(
                 "name" to customMarker.name,
