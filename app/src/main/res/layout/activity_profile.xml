@@ -82,7 +82,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTv" />
+        app:layout_constraintTop_toBottomOf="@+id/joinedTv" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -106,5 +106,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/reviewTv" />
+
+    <TextView
+        android:id="@+id/joinedTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Joined on: --/--/----"
+        android:textColor="#80000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTv" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
