@@ -26,12 +26,12 @@ class RestaurantActivity : AppCompatActivity() {
     private lateinit var addCommentBtn: FloatingActionButton
     private lateinit var restaurantRv: RecyclerView
     private lateinit var backToMapIv: ImageView
+    private lateinit var noReviewNoticeTv: TextView
+    private lateinit var overallRatingIv: ImageView
 
     //Firebase
     private var firebaseDb = Firebase.firestore
 
-    //TODO: Temp Restaurant
-//    val currResto = intent.getStringExtra("RESTAURANT").toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,8 @@ class RestaurantActivity : AppCompatActivity() {
         this.addCommentBtn = findViewById(R.id.addCommentBtn)
         this.restaurantRv = findViewById(R.id.restaurantRv)
         this.backToMapIv = findViewById(R.id.backToMapIv)
+        this.noReviewNoticeTv = findViewById(R.id.noReviewNoticeTv)
+        this.overallRatingIv = findViewById(R.id.overallRatingIv)
 
         //Intents
         val resIntent = this.intent
@@ -51,17 +53,26 @@ class RestaurantActivity : AppCompatActivity() {
 
 
         //Filter Data to Current Restaurant
-        //val filteredReviews = filterToRestaurant(currResto)
-//        val filteredReviews = currResto?.let { filterToRestaurant(it) }
-
         getReviews(currResto.toString()) { filteredReviews ->
             //Restaurant Image
             this.restaurantIv.setImageResource(R.drawable.restaurant_placeholder)
 
             //Restaurant Details
             this.restaurantTv.text = currResto
+
+            //If there are restaurant reviews, show average rating and
+            //hide the "no review" notice
+            if (filteredReviews.isNotEmpty()) {
+                this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it) }
+                this.noReviewNoticeTv.visibility = View.GONE
+            //Otherwise, set restaurant average rating to blank and hide its text box
+            } else {
+                this.overallRatingTv.text = " "
+                this.overallRatingIv.visibility = View.GONE
+            }
             //this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
-            this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it)}
+
+
 
 
             //Restaurant Reviews
@@ -69,7 +80,7 @@ class RestaurantActivity : AppCompatActivity() {
             this.restaurantRv.layoutManager = LinearLayoutManager(this)
         }
         /*TODO:
-           1. Add Function to edit Restaurant's avgReview whenever view is re-rendered
+           1. Add Function to update Restaurant's avgReview whenever view is re-rendered
            2. Add onStart function which will refresh Reviews
            3. Fix Reviews to show in order (e.g. SecretAgno Candice 5 star review always on top)
 

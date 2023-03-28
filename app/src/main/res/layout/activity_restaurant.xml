@@ -131,6 +131,19 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/noReviewNoticeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="Restaurant currently doesn't have\n any reviews yet"
+            android:textAlignment="center"
+            android:textColor="#80000000"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="@+id/restaurantRv"
+            app:layout_constraintStart_toStartOf="@+id/restaurantRv"
+            app:layout_constraintTop_toBottomOf="@+id/restaurantReviewTv" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
