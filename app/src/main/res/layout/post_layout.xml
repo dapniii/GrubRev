@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
-                android:text="4.0"
+                android:text="-.-"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -61,7 +61,7 @@
                     android:id="@+id/postRestaurantTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="postRestaurantTv"
+                    android:text="Restaurant name"
                     android:textColor="#80000000"
                     android:textSize="12sp" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="postCommentTv \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    android:text="Review Comment \n\n Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
                     android:textColor="#000000" />
             </LinearLayout>
 
