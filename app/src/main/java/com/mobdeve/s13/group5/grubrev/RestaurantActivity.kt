@@ -51,6 +51,26 @@ class RestaurantActivity : AppCompatActivity() {
         val resIntent = this.intent
         val currResto = resIntent.getStringExtra("RESTAURANT")
 
+        /*TODO:
+           1. DONE - Add Function to update Restaurant's avgReview whenever view is re-rendered
+           2. DONE - Add onStart function which will refresh Reviews
+           3. Fix Reviews to show in order (e.g. SecretAgno Candice 5 star review always on top)
+         */
+        //OnClick
+        this.backToMapIv.setOnClickListener(View.OnClickListener {
+            finish()
+        })
+        this.addCommentBtn.setOnClickListener(View.OnClickListener {
+            openAddReviewActivity(currResto.toString())
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        //Intents
+        val resIntent = this.intent
+        val currResto = resIntent.getStringExtra("RESTAURANT")
 
         //Filter Data to Current Restaurant
         getReviews(currResto.toString()) { filteredReviews ->
@@ -65,35 +85,17 @@ class RestaurantActivity : AppCompatActivity() {
             if (filteredReviews.isNotEmpty()) {
                 this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it) }
                 this.noReviewNoticeTv.visibility = View.GONE
-            //Otherwise, set restaurant average rating to blank and hide its text box
+                //Otherwise, set restaurant average rating to blank and hide its text box
             } else {
                 this.overallRatingTv.text = " "
                 this.overallRatingIv.visibility = View.GONE
             }
             //this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
 
-
-
-
             //Restaurant Reviews
             this.restaurantRv.adapter = MyReviewAdapter(filteredReviews as ArrayList<Review>)
             this.restaurantRv.layoutManager = LinearLayoutManager(this)
         }
-        /*TODO:
-           1. Add Function to update Restaurant's avgReview whenever view is re-rendered
-           2. Add onStart function which will refresh Reviews
-           3. Fix Reviews to show in order (e.g. SecretAgno Candice 5 star review always on top)
-
-         */
-
-        //OnClick
-        this.backToMapIv.setOnClickListener(View.OnClickListener {
-            finish()
-        })
-
-        this.addCommentBtn.setOnClickListener(View.OnClickListener {
-            openAddReviewActivity(currResto.toString())
-        })
     }
 
     private fun filterToRestaurant(restaurant: String): List<Review> {
@@ -112,7 +114,7 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     //This is a temp function only to be ran once to populate db with review data
-    private fun setReviewstoDB(reviewList: ArrayList<Review>) {
+    private fun addReviewstoDB(reviewList: ArrayList<Review>) {
         for (review in reviewList) {
             val reviewData = hashMapOf(
                 "restaurant" to review.restaurant,
