@@ -22,7 +22,7 @@ class ProfileActivity : AppCompatActivity() {
     private val reviewList: ArrayList<Review> = DataHelper.initializeData()
 
     private lateinit var usernameTv: TextView
-    private lateinit var dateTv: TextView
+    private lateinit var noReviewNoticeTv: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var logoutBtn: Button
     private lateinit var backIv: ImageView
@@ -33,7 +33,7 @@ class ProfileActivity : AppCompatActivity() {
 
         //Initialize
         this.usernameTv = findViewById(R.id.usernameTv)
-        this.dateTv = findViewById(R.id.dateTv)
+        this.noReviewNoticeTv = findViewById(R.id.noReviewNoticeTv)
         this.recyclerView = findViewById(R.id.recyclerView)
         this.logoutBtn = findViewById(R.id.logoutBtn)
         this.backIv = findViewById(R.id.backIv)
@@ -62,11 +62,14 @@ class ProfileActivity : AppCompatActivity() {
         getUsername { currUser ->
             //Account Details
             this.usernameTv.text = currUser
-            //TODO: Temp
-            this.dateTv.text = "Joined: 03/04/2023"
 
             //Filter Data to Current User
             val filteredReviews = filterToUsername(currUser)
+
+            //TODO: Temp
+            if (filteredReviews.isNotEmpty()) {
+                this.noReviewNoticeTv.visibility = View.GONE
+            }
 
             //Account Reviews
             this.recyclerView.adapter = MyPostAdapter(filteredReviews as ArrayList<Review>)
