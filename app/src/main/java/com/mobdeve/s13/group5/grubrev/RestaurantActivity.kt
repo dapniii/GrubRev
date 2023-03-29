@@ -12,12 +12,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.osmdroid.util.GeoPoint
 
 class RestaurantActivity : AppCompatActivity() {
 
+    //Temp: Only to be used for testing
     private val reviewList: ArrayList<Review> = DataHelper.initializeData()
 
     private lateinit var restaurantTv: TextView
@@ -51,6 +54,8 @@ class RestaurantActivity : AppCompatActivity() {
         val resIntent = this.intent
         val currResto = resIntent.getStringExtra("RESTAURANT")
 
+        //Add data to DB
+//        addReviewstoDB(reviewList)
         /*TODO:
            1. DONE - Add Function to update Restaurant's avgReview whenever view is re-rendered
            2. DONE - Add onStart function which will refresh Reviews
@@ -120,7 +125,8 @@ class RestaurantActivity : AppCompatActivity() {
                 "restaurant" to review.restaurant,
                 "user" to review.user,
                 "comment" to review.comment,
-                "rating" to review.rating
+                "rating" to review.rating,
+                "timestamp" to FieldValue.serverTimestamp()
             )
 
             firebaseDb.collection("reviews").add(reviewData)
@@ -138,8 +144,16 @@ class RestaurantActivity : AppCompatActivity() {
     private fun getReviews(currResto: String, callback: (ArrayList<Review>) -> Unit) {
         val filteredReviews = arrayListOf<Review>()
 
+        /*NOTE:
+            When adding orderBy, certain fields need to be indexed in Firestore. The shortcut
+            for this is to run it first and wait for an error to pop up on the Run console.
+            Click the link it provides and just leave Firebase to do its thing, once its done
+            building the new indexes, reload the activity and it should then work.
+         */
         firebaseDb.collection("reviews")
-            .whereEqualTo("restaurant", currResto).get()
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .whereEqualTo("restaurant", currResto)
+            .get()
             .addOnSuccessListener { storedReviews ->
                 for (storedReview in storedReviews) {
                     val restaurant = storedReview["restaurant"] as String

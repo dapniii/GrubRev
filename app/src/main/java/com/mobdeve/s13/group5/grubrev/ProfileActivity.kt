@@ -1,7 +1,6 @@
 package com.mobdeve.s13.group5.grubrev
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +18,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -67,9 +69,10 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         })
 
-        getUsername { currUser ->
+        getUserDetails { currUser, dateJoined ->
             //Account Details
             this.usernameTv.text = currUser
+            this.joinedTv.text = "Joined on: $dateJoined"
 
             //Filter Data to Current User
 //            val filteredReviews = filterToUsername(currUser)
@@ -101,16 +104,21 @@ class ProfileActivity : AppCompatActivity() {
         return reviewList.filter{it.user == username}
     }
 
-    private fun getUsername(callback: (String) -> Unit) {
+    private fun getUserDetails(callback: (String, String) -> Unit) {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val db = FirebaseFirestore.getInstance()
 
         db.collection("users").document(uid).get()
             .addOnSuccessListener { doc ->
                 if (doc != null) {
+                    //Get Username
                     val currUser = doc.getString("username").toString()
+                    //Get Date Joined
+                    val timestamp = doc.getTimestamp("timestamp")?.toDate()
+                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                    val dateJoined = dateFormat.format(timestamp!!)
 
-                    callback(currUser)
+                    callback(currUser, dateJoined)
                 } else {
                     Log.d(TAG, "How did you manage to do this?")
                 }
@@ -123,8 +131,16 @@ class ProfileActivity : AppCompatActivity() {
     private fun getReviews(currUser: String, callback: (ArrayList<Review>) -> Unit) {
         val filteredReviews = arrayListOf<Review>()
 
+        /*NOTE:
+            When adding orderBy, certain fields need to be indexed in Firestore. The shortcut
+            for this is to run it first and wait for an error to pop up on the Run console.
+            Click the link it provides and just leave Firebase to do its thing, once its done
+            building the new indexes, reload the activity and it should then work.
+         */
         firebaseDb.collection("reviews")
-            .whereEqualTo("user", currUser).get()
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .whereEqualTo("user", currUser)
+            .get()
             .addOnSuccessListener { storedReviews ->
                 for (storedReview in storedReviews) {
                     val restaurant = storedReview["restaurant"] as String

@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -123,7 +124,8 @@ class SignupActivity : AppCompatActivity() {
                 val currUserID = firebaseAuth.currentUser!!.uid
                 val userMap = hashMapOf(
                     "userID" to currUserID,
-                    "username" to username
+                    "username" to username,
+                    "timestamp" to FieldValue.serverTimestamp()
                 )
 
                 firebaseDb.collection("users").document(currUserID).set(userMap)
@@ -143,8 +145,7 @@ class SignupActivity : AppCompatActivity() {
                 //it will automatically redirect to MapActivity
             } else {
                 //Show specific error
-                //Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it.exception?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

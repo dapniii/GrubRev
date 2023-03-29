@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddReviewActivity : AppCompatActivity() {
@@ -86,7 +87,13 @@ class AddReviewActivity : AppCompatActivity() {
     private fun addReview(restaurant: String, username: String, comment: String, rating: Double) {
         val db = FirebaseFirestore.getInstance()
 
-        val newReview = Review(restaurant, username, comment, rating)
+        val newReview = hashMapOf(
+            "restaurant" to restaurant,
+            "user" to username,
+            "comment" to comment,
+            "rating" to rating,
+            "timestamp" to FieldValue.serverTimestamp()
+        )
         db.collection("reviews").add(newReview)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "Review added to Firestore with ID: ${documentReference.id}")
