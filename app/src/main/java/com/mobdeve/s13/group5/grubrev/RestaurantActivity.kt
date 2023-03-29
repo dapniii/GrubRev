@@ -1,7 +1,9 @@
 package com.mobdeve.s13.group5.grubrev
 
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +17,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import org.osmdroid.util.GeoPoint
+import java.io.File
 
 class RestaurantActivity : AppCompatActivity() {
 
@@ -79,7 +83,8 @@ class RestaurantActivity : AppCompatActivity() {
         //Filter Data to Current Restaurant
         getReviews(currResto.toString()) { filteredReviews ->
             //Restaurant Image
-            this.restaurantIv.setImageResource(R.drawable.restaurant_placeholder)
+//            this.restaurantIv.setImageResource(R.drawable.restaurant_placeholder)
+            currResto?.let { getImage(it) }
 
             //Restaurant Details
             this.restaurantTv.text = currResto
@@ -211,6 +216,21 @@ class RestaurantActivity : AppCompatActivity() {
             }
             .addOnFailureListener {error ->
                 Log.d(TAG, "ERROR: $error")
+            }
+    }
+
+    private fun getImage(currResto: String) {
+        val imageName = currResto
+        val storageReference = FirebaseStorage.getInstance().reference
+                                .child("images/$imageName.jpg")
+        val tempFile = File.createTempFile("tempImage", "jpg")
+        storageReference.getFile(tempFile)
+            .addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeFile(tempFile.absolutePath)
+                restaurantIv.setImageBitmap(bitmap)
+            }
+            .addOnFailureListener {error ->
+                Log.d(TAG, "IMAGE ERROR: $error")
             }
     }
 }
