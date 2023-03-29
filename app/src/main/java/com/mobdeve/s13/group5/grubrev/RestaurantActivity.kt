@@ -1,6 +1,5 @@
 package com.mobdeve.s13.group5.grubrev
 
-import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -167,12 +166,12 @@ class RestaurantActivity : AppCompatActivity() {
 
                     val review = Review(restaurant, user, comment, rating)
                     filteredReviews.add(review)
-                    Log.d(ContentValues.TAG, "Review added to List: $review")
+                    Log.d(TAG, "Review added to List: $review")
                 }
                 callback(filteredReviews) //kind of like return, but async
             }
             .addOnFailureListener {error ->
-                Log.d(ContentValues.TAG, "ERROR: $error")
+                Log.d(TAG, "ERROR: $error")
             }
     }
 }

@@ -76,11 +76,11 @@ class AddReviewActivity : AppCompatActivity() {
                     currUser = doc.getString("username").toString()
                     callback(currUser)
                 } else {
-                    Log.d(ContentValues.TAG, "How did you manage to do this?")
+                    Log.d(TAG, "How did you manage to do this?")
                 }
             }
             .addOnFailureListener { error ->
-                Log.d(ContentValues.TAG, "ERROR: $error")
+                Log.d(TAG, "ERROR: $error")
             }
     }
 
