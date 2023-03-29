@@ -65,6 +65,11 @@ class MapActivity : AppCompatActivity() {
             openProfileActivity()
         })
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         //< * * * OpenStreetMap * * *
         //2. Setup OSM MapView Settings
         mapView.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE)

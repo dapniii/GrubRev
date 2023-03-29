@@ -91,11 +91,15 @@ class RestaurantActivity : AppCompatActivity() {
                 this.overallRatingIv.visibility = View.GONE
                 //Otherwise, set restaurant average rating to blank and hide its text box
             } else {
-                this.overallRatingTv.visibility = View.VISIBLE
-                this.overallRatingIv.visibility = View.VISIBLE
-                this.overallRatingTv.text = getAverageRating(filteredReviews)
+                val avgRating = getAverageRating(filteredReviews)
+                currResto?.let { updateAvgRating (it, avgRating) }
 
                 this.noReviewNoticeTv.visibility = View.GONE
+                this.overallRatingTv.visibility = View.VISIBLE
+                this.overallRatingIv.visibility = View.VISIBLE
+                this.overallRatingTv.text = avgRating
+
+
 
             }
             //this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
@@ -173,6 +177,33 @@ class RestaurantActivity : AppCompatActivity() {
                     Log.d(TAG, "Review added to List: $review")
                 }
                 callback(filteredReviews) //kind of like return, but async
+            }
+            .addOnFailureListener {error ->
+                Log.d(TAG, "ERROR: $error")
+            }
+    }
+
+    private fun updateAvgRating (currResto: String, avgRating: String) {
+        val newRating = avgRating.toDouble()
+
+        firebaseDb.collection("markers")
+            .whereEqualTo("name", currResto)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val data = hashMapOf(
+                        "avgRating" to newRating
+                    )
+
+                    firebaseDb.collection("markers").document(document.id)
+                        .update(data as Map<String, Any>)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Rating updated successfully")
+                        }
+                        .addOnFailureListener {error ->
+                            Log.d(TAG, "UPDATE ERROR: $error")
+                        }
+                }
             }
             .addOnFailureListener {error ->
                 Log.d(TAG, "ERROR: $error")
