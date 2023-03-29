@@ -86,13 +86,17 @@ class RestaurantActivity : AppCompatActivity() {
 
             //If there are restaurant reviews, show average rating and
             //hide the "no review" notice
-            if (filteredReviews.isNotEmpty()) {
-                this.overallRatingTv.text = filteredReviews?.let { getAverageRating(it) }
-                this.noReviewNoticeTv.visibility = View.GONE
-                //Otherwise, set restaurant average rating to blank and hide its text box
-            } else {
+            if (filteredReviews.isEmpty()) {
                 this.overallRatingTv.text = " "
                 this.overallRatingIv.visibility = View.GONE
+                //Otherwise, set restaurant average rating to blank and hide its text box
+            } else {
+                this.overallRatingTv.visibility = View.VISIBLE
+                this.overallRatingIv.visibility = View.VISIBLE
+                this.overallRatingTv.text = getAverageRating(filteredReviews)
+
+                this.noReviewNoticeTv.visibility = View.GONE
+
             }
             //this.overallRatingTv.text = getAverageRating(filteredReviews).toString()
 
