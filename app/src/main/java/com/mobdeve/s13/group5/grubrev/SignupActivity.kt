@@ -29,8 +29,8 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private var firebaseDb = Firebase.firestore
 
-    //TODO: TEMP (only here for checking if user exists)
-    private val reviewList: ArrayList<Review> = DataHelper.initializeData()
+    //Only for error checking using local data
+    //private val reviewList: ArrayList<Review> = DataHelper.initializeData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,6 @@ class SignupActivity : AppCompatActivity() {
             openMainActivity()
         })
 
-        //TODO: Implement Proper Error Checking
         this.signupBtn.setOnClickListener((View.OnClickListener {
             val email = emailEt.text.toString()
             val username = usernameEt.text.toString()
@@ -117,18 +116,14 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    //Create New Account
-    /*TODO:
-       1. Check if username taken
-       2. DONE - fix error messages, dont show raw firebase error messages
-     */
+    //Creates New Account using email, username, and password entered. Will also record a timestamp
+    //of when user registered which will be used for ProfileActivity
     private fun createAccount(email: String, username: String, password: String) {
         //Create new account with email and password
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
 
             //If account successfully created
             if (it.isSuccessful) {
-
                 //< * * * Storing User Data * * *
                 //1. Get new user's details
                 val currUserID = firebaseAuth.currentUser!!.uid
@@ -160,6 +155,7 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
+    //Returns true if user exists and false otherwise
     private fun checkUserExists(username: String, callback: (Boolean) -> Unit) {
         firebaseDb.collection("users")
             .whereEqualTo("username", username)
