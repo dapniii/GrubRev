@@ -92,16 +92,10 @@ class MapActivity : AppCompatActivity() {
         )
         ActivityCompat.requestPermissions(this, permissions, 0)
 
-        //5. TODO: TENTATIVE user current location
-        //mapView.isMyLocationEnabled = true
-        val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(this), mapView)
-        locationOverlay.enableMyLocation()
-        mapView.overlays.add(locationOverlay)
-
         //Awaits loadMarkers function to finish before proceeding to print markers
         getMarkers { customMarkers ->
             Log.d(TAG, "customMarkers: $customMarkers")
-            //6. Print out all custom markers to map
+            //5. Print out all custom markers to map
             for (customMarker in customMarkers) {
                 val osmMarker = Marker(mapView)
                 osmMarker.position = customMarker.location
