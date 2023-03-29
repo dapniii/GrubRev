@@ -152,6 +152,12 @@ class RestaurantActivity : AppCompatActivity() {
     private fun getReviews(currResto: String, callback: (ArrayList<Review>) -> Unit) {
         val filteredReviews = arrayListOf<Review>()
 
+        //Show progress dialog to visually entertain user's eyeballs
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Fetching Data...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
         /*NOTE:
             When adding orderBy, certain fields need to be indexed in Firestore. The shortcut
             for this is to run it first and wait for an error to pop up on the Run console.
@@ -177,9 +183,17 @@ class RestaurantActivity : AppCompatActivity() {
                     filteredReviews.add(review)
                     Log.d(TAG, "Review added to List: $review")
                 }
+                //Stops progress dialog
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
                 callback(filteredReviews) //kind of like return, but async
             }
             .addOnFailureListener {error ->
+                //Stops progress dialog
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
                 Log.d(TAG, "ERROR: $error")
             }
     }

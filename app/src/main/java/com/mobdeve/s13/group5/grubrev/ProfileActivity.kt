@@ -1,6 +1,7 @@
 package com.mobdeve.s13.group5.grubrev
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -108,6 +109,12 @@ class ProfileActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val db = FirebaseFirestore.getInstance()
 
+        //Show progress dialog to visually entertain user's eyeballs
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Fetching Data...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
         db.collection("users").document(uid).get()
             .addOnSuccessListener { doc ->
                 if (doc != null) {
@@ -118,12 +125,25 @@ class ProfileActivity : AppCompatActivity() {
                     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
                     val dateJoined = dateFormat.format(timestamp!!)
 
+                    //Stops progress dialog
+                    if (progressDialog.isShowing) {
+                        progressDialog.dismiss()
+                    }
                     callback(currUser, dateJoined)
                 } else {
+                    //Stops progress dialog
+                    if (progressDialog.isShowing) {
+                        progressDialog.dismiss()
+                    }
                     Log.d(TAG, "How did you manage to do this?")
                 }
+
             }
             .addOnFailureListener { error ->
+                //Stops progress dialog
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
                 Log.d(TAG, "ERROR: $error")
             }
     }

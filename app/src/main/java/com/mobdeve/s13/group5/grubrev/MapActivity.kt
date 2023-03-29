@@ -12,6 +12,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import android.Manifest
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
@@ -161,6 +162,12 @@ class MapActivity : AppCompatActivity() {
     private fun getMarkers(callback: (ArrayList<CustomMarker>) -> Unit) {
         val customMarkers = arrayListOf<CustomMarker>()
 
+        //Show progress dialog to visually entertain user's eyeballs
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Fetching Data...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
         firebaseDb.collection("markers").get()
             .addOnSuccessListener { storedMarkers ->
                 for (storedMarker in storedMarkers) {
@@ -179,9 +186,17 @@ class MapActivity : AppCompatActivity() {
                     customMarkers.add(customMarker)
                     Log.d(TAG, "Marker added to List: $customMarker")
                 }
+                //Stops progress dialog
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
                 callback(customMarkers) //kind of like return, but async
             }
             .addOnFailureListener {error ->
+                //Stops progress dialog
+                if (progressDialog.isShowing) {
+                    progressDialog.dismiss()
+                }
                 Log.d(TAG, "ERROR: $error")
             }
     }
