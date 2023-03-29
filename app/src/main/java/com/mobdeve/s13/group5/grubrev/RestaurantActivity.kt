@@ -57,13 +57,9 @@ class RestaurantActivity : AppCompatActivity() {
         val resIntent = this.intent
         val currResto = resIntent.getStringExtra("RESTAURANT")
 
-        //Add data to DB
+        //Add dummy data to DB
 //        addReviewstoDB(reviewList)
-        /*TODO:
-           1. DONE - Add Function to update Restaurant's avgReview whenever view is re-rendered
-           2. DONE - Add onStart function which will refresh Reviews
-           3. Fix Reviews to show in order (e.g. SecretAgno Candice 5 star review always on top)
-         */
+
         //OnClick
         this.backToMapIv.setOnClickListener(View.OnClickListener {
             finish()
