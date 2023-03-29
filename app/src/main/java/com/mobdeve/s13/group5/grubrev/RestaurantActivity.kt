@@ -186,6 +186,8 @@ class RestaurantActivity : AppCompatActivity() {
     private fun updateAvgRating (currResto: String, avgRating: String) {
         val newRating = avgRating.toDouble()
 
+        //1. First we need to get the "markers" document which contains the current restaurant's
+        //   name because we do not pass the document's ID
         firebaseDb.collection("markers")
             .whereEqualTo("name", currResto)
             .get()
@@ -194,7 +196,9 @@ class RestaurantActivity : AppCompatActivity() {
                     val data = hashMapOf(
                         "avgRating" to newRating
                     )
-
+                    //2. Once we get the document that contains the current restaurant's name, we
+                    //   can then use its ID to reference the specific marker document and update
+                    //   its average rating
                     firebaseDb.collection("markers").document(document.id)
                         .update(data as Map<String, Any>)
                         .addOnSuccessListener {
