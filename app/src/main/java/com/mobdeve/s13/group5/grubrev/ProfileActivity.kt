@@ -79,7 +79,6 @@ class ProfileActivity : AppCompatActivity() {
 //            val filteredReviews = filterToUsername(currUser)
 
             getReviews(currUser) { filteredReviews ->
-                //TODO: Temp
                 if (filteredReviews.isNotEmpty()) {
                     this.noReviewNoticeTv.visibility = View.GONE
                 }
