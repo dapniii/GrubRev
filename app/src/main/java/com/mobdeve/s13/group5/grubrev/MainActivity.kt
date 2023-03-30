@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             openSignUpActivity()
         })
 
-        //TODO: TEMP
         this.loginBtn.setOnClickListener((View.OnClickListener {
             val email = emailEt.text.toString()
             val password = passwordEt.text.toString()
@@ -52,22 +51,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            //Check if user is registered
-//            else if (!userExists(username)) {
-//                Toast.makeText(
-//                    this,
-//                    "ERROR: Invalid username",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-            //TODO: Check if password matches with username
-//            else if (!userExists(username)) {
-//                Toast.makeText(
-//                    this,
-//                    "ERROR: Invalid username",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
+            
             else {
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener{
                     if (it.isSuccessful) {
