@@ -49,8 +49,8 @@ class AddReviewActivity : AppCompatActivity() {
         //< * * * Adding Review * * *
         this.sendBtn.setOnClickListener(View.OnClickListener {
             //1. Get inputs
-            val comment = addCommentEt.text.toString()
             val rating = addRatingRb.rating.toDouble()
+            val comment = addCommentEt.text.toString()
 
             //2. Get current user's username
             getUsername { currUser ->
@@ -62,6 +62,10 @@ class AddReviewActivity : AppCompatActivity() {
         // * * * Adding Review * * * />
 
 
+    }
+
+    private fun isError(){
+        //TODO
     }
 
     private fun getUsername(callback: (String) -> Unit) {
