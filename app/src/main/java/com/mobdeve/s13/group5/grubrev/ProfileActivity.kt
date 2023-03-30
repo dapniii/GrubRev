@@ -52,7 +52,7 @@ class ProfileActivity : AppCompatActivity() {
         //Intent
         val resIntent = this.intent
         val showLogout = resIntent.getBooleanExtra("SHOW_LOGOUT", true)
-//        val currUser = resIntent.getStringExtra("USERNAME").toString()
+        val otherUser = resIntent.getStringExtra("USERNAME").toString()
 
 
         if (!showLogout) {
@@ -70,21 +70,18 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         })
 
-        getUserDetails { currUser, dateJoined ->
+        getUserDetails(otherUser) { username, dateJoined ->
             //Account Details
-            this.usernameTv.text = currUser
+            this.usernameTv.text = username
             this.joinedTv.text = "Joined on: $dateJoined"
 
-            //Filter Data to Current User
-//            val filteredReviews = filterToUsername(currUser)
-
-            getReviews(currUser) { filteredReviews ->
+            getReviews(username) { filteredReviews ->
                 if (filteredReviews.isNotEmpty()) {
                     this.noReviewNoticeTv.visibility = View.GONE
                 }
 
                 //Account Reviews
-                this.recyclerView.adapter = MyPostAdapter(filteredReviews as ArrayList<Review>)
+                this.recyclerView.adapter = MyPostAdapter(filteredReviews)
                 this.recyclerView.layoutManager = LinearLayoutManager(this)
             }
 
@@ -104,47 +101,81 @@ class ProfileActivity : AppCompatActivity() {
         return reviewList.filter{it.user == username}
     }
 
-    private fun getUserDetails(callback: (String, String) -> Unit) {
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val db = FirebaseFirestore.getInstance()
-
+    private fun getUserDetails(otherUser: String?, callback: (String, String) -> Unit) {
         //Show progress dialog to visually entertain user's eyeballs
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Fetching Data...")
         progressDialog.setCancelable(false)
         progressDialog.show()
 
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener { doc ->
-                if (doc != null) {
-                    //Get Username
-                    val currUser = doc.getString("username").toString()
-                    //Get Date Joined
-                    val timestamp = doc.getTimestamp("timestamp")?.toDate()
-                    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                    val dateJoined = dateFormat.format(timestamp!!)
+        if (otherUser?.isEmpty() == true){
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
+            firebaseDb.collection("users").document(uid).get()
+                .addOnSuccessListener { doc ->
+                    if (doc != null) {
+                        //Get Username
+                        val currUser = doc.getString("username").toString()
+                        //Get Date Joined
+                        val timestamp = doc.getTimestamp("timestamp")?.toDate()
+                        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                        val dateJoined = dateFormat.format(timestamp!!)
+
+                        //Stops progress dialog
+                        if (progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                        callback(currUser, dateJoined)
+                    } else {
+                        //Stops progress dialog
+                        if (progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                        Log.d(TAG, "How did you manage to do this?")
+                    }
+
+                }
+                .addOnFailureListener { error ->
                     //Stops progress dialog
                     if (progressDialog.isShowing) {
                         progressDialog.dismiss()
                     }
-                    callback(currUser, dateJoined)
-                } else {
+                    Log.d(TAG, "ERROR: $error")
+                }
+        } else {
+            firebaseDb.collection("users")
+                .whereEqualTo("username", otherUser)
+                .get()
+                .addOnSuccessListener { doc ->
+                    if (doc != null) {
+                        //Get Date Joined
+                        val timestamp = doc.documents[0].getTimestamp("timestamp")?.toDate()
+                        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+                        val dateJoined = dateFormat.format(timestamp!!)
+
+                        //Stops progress dialog
+                        if (progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                        callback(otherUser.toString(), dateJoined)
+                    } else {
+                        //Stops progress dialog
+                        if (progressDialog.isShowing) {
+                            progressDialog.dismiss()
+                        }
+                        Log.d(TAG, "How did you manage to do this?")
+                    }
+
+                }
+                .addOnFailureListener { error ->
                     //Stops progress dialog
                     if (progressDialog.isShowing) {
                         progressDialog.dismiss()
                     }
-                    Log.d(TAG, "How did you manage to do this?")
+                    Log.d(TAG, "ERROR: $error")
                 }
+        }
 
-            }
-            .addOnFailureListener { error ->
-                //Stops progress dialog
-                if (progressDialog.isShowing) {
-                    progressDialog.dismiss()
-                }
-                Log.d(TAG, "ERROR: $error")
-            }
     }
 
     private fun getReviews(currUser: String, callback: (ArrayList<Review>) -> Unit) {
