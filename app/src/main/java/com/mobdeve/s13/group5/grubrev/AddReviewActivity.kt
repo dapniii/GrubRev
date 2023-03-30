@@ -52,10 +52,20 @@ class AddReviewActivity : AppCompatActivity() {
             val rating = addRatingRb.rating.toDouble()
             val comment = addCommentEt.text.toString()
 
-            //2. Get current user's username
-            getUsername { currUser ->
-                //3. Once username taken, add new review to db
-                addReview(currResto!!, currUser, comment, rating)
+            val errorMessage = isError(rating, comment)
+
+            if (errorMessage != null) {
+                Toast.makeText(
+                    this,
+                    "ERROR: $errorMessage",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                //2. Get current user's username
+                getUsername { currUser ->
+                    //3. Once username taken, add new review to db
+                    addReview(currResto!!, currUser, comment, rating)
+                }
             }
 
         })
@@ -64,8 +74,14 @@ class AddReviewActivity : AppCompatActivity() {
 
     }
 
-    private fun isError(){
-        //TODO
+    private fun isError(rating : Double, comment: String) : String? {
+        //Check if all fields are filled up
+        if (rating == 0.0 ||
+            comment.isNullOrBlank()) {
+            return "Please fill up all fields"
+        } else {
+            return null
+        }
     }
 
     private fun getUsername(callback: (String) -> Unit) {
