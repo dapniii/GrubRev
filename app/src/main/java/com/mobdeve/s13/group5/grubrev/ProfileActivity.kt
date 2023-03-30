@@ -108,6 +108,7 @@ class ProfileActivity : AppCompatActivity() {
         progressDialog.setCancelable(false)
         progressDialog.show()
 
+        //If user to access is current logged in user, get current user's details
         if (otherUser?.isEmpty() == true){
             val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
@@ -142,6 +143,7 @@ class ProfileActivity : AppCompatActivity() {
                     }
                     Log.d(TAG, "ERROR: $error")
                 }
+        //Otherwise, get other user's account details
         } else {
             firebaseDb.collection("users")
                 .whereEqualTo("username", otherUser)
